@@ -148,6 +148,14 @@ constexpr inline CharGroup_ charRange(char first, char last) {
   return CharGroup_().orRange(first, last);
 }
 
+#if _MSC_VER
+
+#define MSVC_ANYOFCHARS_WORKAROUND(chars) CharGroup_().orAny(chars)
+// As of this writing, the constexpr function implementation of anyOfChars causes an ICE in
+// MSVC 2015.
+
+#else
+
 constexpr inline CharGroup_ anyOfChars(const char* chars) {
   // Returns a parser that accepts any of the characters in the given string (which should usually
   // be a literal).  The returned parser is of the same type as returned by `charRange()` -- see
@@ -155,6 +163,10 @@ constexpr inline CharGroup_ anyOfChars(const char* chars) {
 
   return CharGroup_().orAny(chars);
 }
+
+#define MSVC_ANYOFCHARS_WORKAROUND(chars) anyOfChars(chars)
+
+#endif  // _MSC_VER, else
 
 // =======================================================================================
 
@@ -185,12 +197,13 @@ constexpr auto nameStart = alpha.orChar('_');
 constexpr auto nameChar = alphaNumeric.orChar('_');
 constexpr auto hexDigit = charRange('0', '9').orRange('a', 'f').orRange('A', 'F');
 constexpr auto octDigit = charRange('0', '7');
-constexpr auto whitespaceChar = anyOfChars(" \f\n\r\t\v");
+constexpr auto whitespaceChar = MSVC_ANYOFCHARS_WORKAROUND(" \f\n\r\t\v");
 constexpr auto controlChar = charRange(0, 0x1f).invert().orGroup(whitespaceChar).invert();
 
-constexpr auto whitespace = many(anyOfChars(" \f\n\r\t\v"));
+constexpr auto whitespace = many(MSVC_ANYOFCHARS_WORKAROUND(" \f\n\r\t\v"));
 
-constexpr auto discardWhitespace = discard(many(discard(anyOfChars(" \f\n\r\t\v"))));
+constexpr auto discardWhitespace = discard(many(discard(
+    MSVC_ANYOFCHARS_WORKAROUND(" \f\n\r\t\v"))));
 // Like discard(whitespace) but avoids some memory allocation.
 
 // =======================================================================================
@@ -264,7 +277,8 @@ constexpr auto number = transform(
     sequence(
         oneOrMore(digit),
         optional(sequence(exactChar<'.'>(), many(digit))),
-        optional(sequence(discard(anyOfChars("eE")), optional(anyOfChars("+-")), many(digit))),
+        optional(sequence(discard(MSVC_ANYOFCHARS_WORKAROUND("eE")),
+            optional(MSVC_ANYOFCHARS_WORKAROUND("+-")), many(digit))),
         notLookingAt(alpha.orAny("_."))),
     _::ParseFloat());
 
@@ -317,7 +331,7 @@ struct ParseOctEscape {
 
 constexpr auto escapeSequence =
     sequence(exactChar<'\\'>(), oneOf(
-        transform(anyOfChars("abfnrtv'\"\\\?"), _::InterpretEscape()),
+        transform(MSVC_ANYOFCHARS_WORKAROUND("abfnrtv'\"\\\?"), _::InterpretEscape()),
         transform(sequence(exactChar<'x'>(), hexDigit, hexDigit), _::ParseHexEscape()),
         transform(sequence(octDigit, optional(octDigit), optional(octDigit)),
                   _::ParseOctEscape())));
@@ -326,13 +340,13 @@ constexpr auto escapeSequence =
 
 constexpr auto doubleQuotedString = charsToString(sequence(
     exactChar<'\"'>(),
-    many(oneOf(anyOfChars("\\\n\"").invert(), escapeSequence)),
+    many(oneOf(MSVC_ANYOFCHARS_WORKAROUND("\\\n\"").invert(), escapeSequence)),
     exactChar<'\"'>()));
 // Parses a C-style double-quoted string.
 
 constexpr auto singleQuotedString = charsToString(sequence(
     exactChar<'\''>(),
-    many(oneOf(anyOfChars("\\\n\'").invert(), escapeSequence)),
+    many(oneOf(MSVC_ANYOFCHARS_WORKAROUND("\\\n\'").invert(), escapeSequence)),
     exactChar<'\''>()));
 // Parses a C-style single-quoted string.
 

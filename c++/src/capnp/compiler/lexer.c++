@@ -110,11 +110,12 @@ void attachDocComment(Statement::Builder statement, kj::Array<kj::String>&& comm
 }
 
 constexpr auto discardComment =
-    sequence(p::exactChar<'#'>(), p::discard(p::many(p::discard(p::anyOfChars("\n").invert()))),
+    sequence(p::exactChar<'#'>(), p::discard(p::many(p::discard(
+                 p::MSVC_ANYOFCHARS_WORKAROUND("\n").invert()))),
              p::oneOf(p::exactChar<'\n'>(), p::endOfInput));
 constexpr auto saveComment =
     sequence(p::exactChar<'#'>(), p::discard(p::optional(p::exactChar<' '>())),
-             p::charsToString(p::many(p::anyOfChars("\n").invert())),
+             p::charsToString(p::many(p::MSVC_ANYOFCHARS_WORKAROUND("\n").invert())),
              p::oneOf(p::exactChar<'\n'>(), p::endOfInput));
 
 constexpr auto utf8Bom =
@@ -205,7 +206,7 @@ Lexer::Lexer(Orphanage orphanageParam, ErrorReporter& errorReporter)
             return t;
           }),
       p::transformWithLocation(
-          p::charsToString(p::oneOrMore(p::anyOfChars("!$%&*+-./:<=>?@^|~"))),
+          p::charsToString(p::oneOrMore(p::MSVC_ANYOFCHARS_WORKAROUND("!$%&*+-./:<=>?@^|~"))),
           [this](Location loc, kj::String text) -> Orphan<Token> {
             auto t = orphanage.newOrphan<Token>();
             initTok(t, loc).setOperator(text);

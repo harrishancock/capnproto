@@ -133,7 +133,7 @@ TEST(CharParsers, CharRange) {
 }
 
 TEST(CharParsers, AnyOfChars) {
-  constexpr auto parser = anyOfChars("axn2B");
+  constexpr auto parser = MSVC_ANYOFCHARS_WORKAROUND("axn2B");
 
   {
     StringPtr text = "a";
