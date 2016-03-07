@@ -34,6 +34,7 @@
 #include <kj/vector.h>
 #include "any.h"
 #include "pointer-helpers.h"
+#include "raw-schema.h"
 
 namespace capnp {
 
@@ -64,8 +65,6 @@ public:
 
 class LocalClient;
 namespace _ { // private
-struct RawSchema;
-struct RawBrandedSchema;
 extern const RawSchema NULL_INTERFACE_SCHEMA;  // defined in schema.c++
 class CapabilityServerSetBase;
 }  // namespace _ (private)

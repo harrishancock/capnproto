@@ -23,6 +23,7 @@
 #include "layout.h"
 #include <kj/debug.h>
 #include "arena.h"
+#include <kj/atomic.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -34,14 +35,14 @@ namespace capnp {
 namespace _ {  // private
 
 #if !CAPNP_LITE
-static BrokenCapFactory* brokenCapFactory = nullptr;
+static kj::Atomic<BrokenCapFactory*> brokenCapFactory = nullptr;
 // Horrible hack:  We need to be able to construct broken caps without any capability context,
 // but we can't have a link-time dependency on libcapnp-rpc.
 
 void setGlobalBrokenCapFactoryForLayoutCpp(BrokenCapFactory& factory) {
   // Called from capability.c++ when the capability API is used, to make sure that layout.c++
   // is ready for it.  May be called multiple times but always with the same value.
-  __atomic_store_n(&brokenCapFactory, &factory, __ATOMIC_RELAXED);
+  brokenCapFactory.store(&factory);
 }
 
 }  // namespace _ (private)
@@ -2010,19 +2011,19 @@ struct WireHelpers {
       const WirePointer* ref, int nestingLimit)) {
     kj::Maybe<kj::Own<ClientHook>> maybeCap;
 
-    KJ_REQUIRE(brokenCapFactory != nullptr,
+    KJ_REQUIRE(brokenCapFactory.load() != nullptr,
                "Trying to read capabilities without ever having created a capability context.  "
                "To read capabilities from a message, you must imbue it with CapReaderContext, or "
                "use the Cap'n Proto RPC system.");
 
     if (ref->isNull()) {
-      return brokenCapFactory->newNullCap();
+      return brokenCapFactory.load()->newNullCap();
     } else if (!ref->isCapability()) {
       KJ_FAIL_REQUIRE(
           "Message contains non-capability pointer where capability pointer was expected.") {
         break;
       }
-      return brokenCapFactory->newBrokenCap(
+      return brokenCapFactory.load()->newBrokenCap(
           "Calling capability extracted from a non-capability pointer.");
     } else KJ_IF_MAYBE(cap, capTable->extractCap(ref->capRef.index.get())) {
       return kj::mv(*cap);
@@ -2030,7 +2031,8 @@ struct WireHelpers {
       KJ_FAIL_REQUIRE("Message contains invalid capability pointer.") {
         break;
       }
-      return brokenCapFactory->newBrokenCap("Calling invalid capability pointer.");
+      return brokenCapFactory.load()->newBrokenCap(
+          "Calling invalid capability pointer.");
     }
   }
 #endif  // !CAPNP_LITE

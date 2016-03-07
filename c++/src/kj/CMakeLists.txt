@@ -48,6 +48,7 @@ set(kj_headers
   threadlocal.h
   main.h
   windows-sanity.h
+  atomic.h
 )
 set(kj-parse_headers
   parse/common.h

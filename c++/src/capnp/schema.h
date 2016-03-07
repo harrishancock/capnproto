@@ -144,7 +144,7 @@ private:
   const _::RawBrandedSchema* raw;
 
   inline explicit Schema(const _::RawBrandedSchema* raw): raw(raw) {
-    KJ_IREQUIRE(raw->lazyInitializer == nullptr,
+    KJ_IREQUIRE(raw->lazyInitializer.load() == nullptr,
         "Must call ensureInitialized() on RawSchema before constructing Schema.");
   }
 

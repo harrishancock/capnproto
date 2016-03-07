@@ -1278,7 +1278,7 @@ _::RawSchema* SchemaLoader::Impl::load(const schema::Node::Reader& reader, bool 
 
     // If the existing slot is a placeholder, but we're upgrading it to a non-placeholder, we
     // need to clear the initializer later.
-    shouldClearInitializer = slot->lazyInitializer != nullptr && !isPlaceholder;
+    shouldClearInitializer = slot->lazyInitializer.load() != nullptr && !isPlaceholder;
 
     auto existing = readMessageUnchecked<schema::Node>(slot->encodedNode);
     CompatibilityChecker checker(*this);
@@ -1286,7 +1286,7 @@ _::RawSchema* SchemaLoader::Impl::load(const schema::Node::Reader& reader, bool 
     // Prefer to replace the existing schema if the existing schema is a placeholder.  Otherwise,
     // prefer to keep the existing schema.
     shouldReplace = checker.shouldReplace(
-        existing, validatedReader, slot->lazyInitializer != nullptr);
+        existing, validatedReader, slot->lazyInitializer.load() != nullptr);
   }
 
   if (shouldReplace) {
@@ -1308,8 +1308,8 @@ _::RawSchema* SchemaLoader::Impl::load(const schema::Node::Reader& reader, bool 
     // If this schema is not newly-allocated, it may already be in the wild, specifically in the
     // dependency list of other schemas.  Once the initializer is null, it is live, so we must do
     // a release-store here.
-    __atomic_store_n(&slot->lazyInitializer, nullptr, __ATOMIC_RELEASE);
-    __atomic_store_n(&slot->defaultBrand.lazyInitializer, nullptr, __ATOMIC_RELEASE);
+    slot->lazyInitializer.store(nullptr, kj::MemoryOrder::RELEASE);
+    slot->defaultBrand.lazyInitializer.store(nullptr, kj::MemoryOrder::RELEASE);
   }
 
   return slot;
@@ -1341,7 +1341,7 @@ _::RawSchema* SchemaLoader::Impl::loadNative(const _::RawSchema* nativeSchema) {
     auto native = readMessageUnchecked<schema::Node>(nativeSchema->encodedNode);
     CompatibilityChecker checker(*this);
     shouldReplace = checker.shouldReplace(existing, native, true);
-    shouldClearInitializer = slot->lazyInitializer != nullptr;
+    shouldClearInitializer = slot->lazyInitializer.load() != nullptr;
   }
 
   // Since we recurse below, the slot in the hash map could move around.  Copy out the pointer
@@ -1399,8 +1399,8 @@ _::RawSchema* SchemaLoader::Impl::loadNative(const _::RawSchema* nativeSchema) {
     // If this schema is not newly-allocated, it may already be in the wild, specifically in the
     // dependency list of other schemas.  Once the initializer is null, it is live, so we must do
     // a release-store here.
-    __atomic_store_n(&result->lazyInitializer, nullptr, __ATOMIC_RELEASE);
-    __atomic_store_n(&result->defaultBrand.lazyInitializer, nullptr, __ATOMIC_RELEASE);
+    result->lazyInitializer.store(nullptr, kj::MemoryOrder::RELEASE);
+    result->defaultBrand.lazyInitializer.store(nullptr, kj::MemoryOrder::RELEASE);
   }
 
   return result;
@@ -1811,13 +1811,13 @@ const _::RawBrandedSchema* SchemaLoader::Impl::getUnbound(const _::RawSchema* sc
 kj::Array<Schema> SchemaLoader::Impl::getAllLoaded() const {
   size_t count = 0;
   for (auto& schema: schemas) {
-    if (schema.second->lazyInitializer == nullptr) ++count;
+    if (schema.second->lazyInitializer.load() == nullptr) ++count;
   }
 
   kj::Array<Schema> result = kj::heapArray<Schema>(count);
   size_t i = 0;
   for (auto& schema: schemas) {
-    if (schema.second->lazyInitializer == nullptr) {
+    if (schema.second->lazyInitializer.load() == nullptr) {
       result[i++] = Schema(&schema.second->defaultBrand);
     }
   }
@@ -1896,7 +1896,7 @@ void SchemaLoader::InitializerImpl::init(const _::RawSchema* schema) const {
     c->load(loader, schema->id);
   }
 
-  if (schema->lazyInitializer != nullptr) {
+  if (schema->lazyInitializer.load() != nullptr) {
     // The callback declined to load a schema.  We need to disable the initializer so that it
     // doesn't get invoked again later, as we can no longer modify this schema once it is in use.
 
@@ -1910,8 +1910,8 @@ void SchemaLoader::InitializerImpl::init(const _::RawSchema* schema) const {
               "A schema not belonging to this loader used its initializer.");
 
     // Disable the initializer.
-    __atomic_store_n(&mutableSchema->lazyInitializer, nullptr, __ATOMIC_RELEASE);
-    __atomic_store_n(&mutableSchema->defaultBrand.lazyInitializer, nullptr, __ATOMIC_RELEASE);
+    mutableSchema->lazyInitializer.store(nullptr, kj::MemoryOrder::RELEASE);
+    mutableSchema->defaultBrand.lazyInitializer.store(nullptr, kj::MemoryOrder::RELEASE);
   }
 }
 
@@ -1920,7 +1920,7 @@ void SchemaLoader::BrandedInitializerImpl::init(const _::RawBrandedSchema* schem
 
   auto lock = loader.impl.lockExclusive();
 
-  if (schema->lazyInitializer == nullptr) {
+  if (schema->lazyInitializer.load() == nullptr) {
     // Never mind, someone beat us to it.
     return;
   }
@@ -1939,7 +1939,7 @@ void SchemaLoader::BrandedInitializerImpl::init(const _::RawBrandedSchema* schem
   mutableSchema->dependencyCount = deps.size();
 
   // It's initialized now, so disable the initializer.
-  __atomic_store_n(&mutableSchema->lazyInitializer, nullptr, __ATOMIC_RELEASE);
+  mutableSchema->lazyInitializer.store(nullptr, kj::MemoryOrder::RELEASE);
 }
 
 // =======================================================================================
@@ -1960,7 +1960,7 @@ Schema SchemaLoader::get(uint64_t id, schema::Brand::Reader brand, Schema scope)
 kj::Maybe<Schema> SchemaLoader::tryGet(
     uint64_t id, schema::Brand::Reader brand, Schema scope) const {
   auto getResult = impl.lockShared()->get()->tryGet(id);
-  if (getResult.schema == nullptr || getResult.schema->lazyInitializer != nullptr) {
+  if (getResult.schema == nullptr || getResult.schema->lazyInitializer.load() != nullptr) {
     // This schema couldn't be found or has yet to be lazily loaded. If we have a lazy loader
     // callback, invoke it now to try to get it to load this schema.
     KJ_IF_MAYBE(c, getResult.callback) {
@@ -1968,7 +1968,7 @@ kj::Maybe<Schema> SchemaLoader::tryGet(
     }
     getResult = impl.lockShared()->get()->tryGet(id);
   }
-  if (getResult.schema != nullptr && getResult.schema->lazyInitializer == nullptr) {
+  if (getResult.schema != nullptr && getResult.schema->lazyInitializer.load() == nullptr) {
     if (brand.getScopes().size() > 0) {
       auto brandedSchema = impl.lockExclusive()->get()->makeBranded(
           getResult.schema, brand, kj::arrayPtr(scope.raw->scopes, scope.raw->scopeCount));
@@ -2052,7 +2052,7 @@ Schema SchemaLoader::load(const schema::Node::Reader& reader) {
 Schema SchemaLoader::loadOnce(const schema::Node::Reader& reader) const {
   auto locked = impl.lockExclusive();
   auto getResult = locked->get()->tryGet(reader.getId());
-  if (getResult.schema == nullptr || getResult.schema->lazyInitializer != nullptr) {
+  if (getResult.schema == nullptr || getResult.schema->lazyInitializer.load() != nullptr) {
     // Doesn't exist yet, or the existing schema is a placeholder and therefore has not yet been
     // seen publicly.  Go ahead and load the incoming reader.
     return Schema(&locked->get()->load(reader, false)->defaultBrand);
