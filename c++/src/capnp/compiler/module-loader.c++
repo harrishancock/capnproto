@@ -57,7 +57,7 @@ protected:
   }
 };
 
-constexpr MmapDisposer mmapDisposer = MmapDisposer();
+static const MmapDisposer mmapDisposer = MmapDisposer();
 
 kj::Array<const byte> mmapForRead(kj::StringPtr filename) {
   int fd;

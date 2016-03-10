@@ -151,7 +151,7 @@ private:
   };
   template <typename ParserImpl>
   struct WrapperImplInstance {
-    static constexpr WrapperImpl<ParserImpl> instance = WrapperImpl<ParserImpl>();
+    static const WrapperImpl<ParserImpl> instance;
   };
 
   const void* parser;
@@ -160,8 +160,8 @@ private:
 
 template <typename Input, typename Output>
 template <typename ParserImpl>
-constexpr typename ParserRef<Input, Output>::template WrapperImpl<ParserImpl>
-ParserRef<Input, Output>::WrapperImplInstance<ParserImpl>::instance;
+const typename ParserRef<Input, Output>::template WrapperImpl<ParserImpl>
+ParserRef<Input, Output>::WrapperImplInstance<ParserImpl>::instance = WrapperImpl<ParserImpl>();
 
 template <typename Input, typename ParserImpl>
 constexpr ParserRef<Input, OutputType<ParserImpl, Input>> ref(ParserImpl& impl) {
