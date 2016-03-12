@@ -370,6 +370,18 @@ struct DisallowConstCopy {
   DisallowConstCopy& operator=(DisallowConstCopy&&) = default;
 };
 
+#if _MSC_VER
+#define MSVC_NONCONST_COPY_CAPTURE_WORKAROUND(obj) obj=::kj::cp(obj)
+// MSVC refuses to invoke non-const versions of copy constructors in by-value lambda captures.
+// Wrap your captured object in this macro to force the compiler to perform a copy. Example:
+//
+//   struct Foo: DisallowConstCopy {};
+//   Foo foo;
+//   auto lambda = [MSVC_NONCONST_COPY_CAPTURE_WORKAROUND(foo)] {};
+#else
+#define MSVC_NONCONST_COPY_CAPTURE_WORKAROUND(obj) obj
+#endif
+
 template <typename T>
 struct DisallowConstCopyIfNotConst: public DisallowConstCopy {
   // Inherit from this when implementing a template that contains a pointer to T and which should

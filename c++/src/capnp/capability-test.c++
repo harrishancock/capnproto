@@ -499,7 +499,8 @@ public:
       request.set("j", true);
 
       return request.send().then(
-          [this,context](capnp::Response<DynamicStruct>&& response) mutable {
+          [this,MSVC_NONCONST_COPY_CAPTURE_WORKAROUND(context)]
+              (capnp::Response<DynamicStruct>&& response) mutable {
             EXPECT_EQ("foo", response.get("x").as<Text>());
 
             auto result = context.getResults();

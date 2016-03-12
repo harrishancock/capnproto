@@ -1072,7 +1072,8 @@ public:
     auto cap = context.getParams().getCap();
     context.releaseParams();
     return cap.saveRequest().send()
-        .then([context](Response<Persistent<Text>::SaveResults> response) mutable {
+        .then([MSVC_NONCONST_COPY_CAPTURE_WORKAROUND(context)]
+            (Response<Persistent<Text>::SaveResults> response) mutable {
       context.getResults().initSturdyRef().getObjectId().setAs<Text>(
           kj::str("imported-", response.getSturdyRef()));
     });
@@ -1082,7 +1083,8 @@ public:
     auto cap = context.getParams().getCap();
     context.releaseParams();
     return cap.saveRequest().send()
-        .then([context](Response<Persistent<test::TestSturdyRef>::SaveResults> response) mutable {
+        .then([MSVC_NONCONST_COPY_CAPTURE_WORKAROUND(context)]
+            (Response<Persistent<test::TestSturdyRef>::SaveResults> response) mutable {
       context.getResults().setSturdyRef(kj::str("exported-",
           response.getSturdyRef().getObjectId().getAs<Text>()));
     });
