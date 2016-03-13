@@ -2086,7 +2086,16 @@ private:
     auto requestMethodImpl = kj::strTree(
         templateContext.allDecls(),
         implicitParamsTemplateDecl,
-        "::capnp::Request<", paramType, ", ", resultType, ">\n",
+        templateContext.isGeneric() ? "#if _MSC_VER\nauto\n#else\n" : "",
+        // This is ugly. If the first parameter to ::capnp::Request is a template instantiation,
+        // sometimes MSVC will complain that it's unspecialized and can't be used as a parameter in
+        // the return type (error C3203). It's easier just to use C++14's return type deduction
+        // here. Another option would be to move this implementation inline to the Client class
+        // definition. Either way, we're depending on the fact that we know this implementation
+        // text will end up in the header, because we need similar #ifdef'ery in the method
+        // declaration below.
+        "::capnp::Request<", paramType, ", ", resultType, ">",
+        templateContext.isGeneric() ? "\n#endif\n" : "",
         interfaceName, "::Client::", name, "Request(::kj::Maybe< ::capnp::MessageSize> sizeHint) {\n"
         "  return newCall<", paramType, ", ", resultType, ">(\n"
         "      0x", interfaceIdHex, "ull, ", methodId, ", sizeHint);\n"
@@ -2095,7 +2104,10 @@ private:
     return MethodText {
       kj::strTree(
           implicitParamsTemplateDecl.size() == 0 ? "" : "  ", implicitParamsTemplateDecl,
-          "  ::capnp::Request<", paramType, ", ", resultType, "> ", name, "Request(\n"
+          templateContext.isGeneric() ? "  #if _MSC_VER\n  auto\n  #else\n" : "",
+          "  ::capnp::Request<", paramType, ", ", resultType, ">\n",
+          templateContext.isGeneric() ? "  #endif\n" : "",
+          "  ", name, "Request(\n"
           "      ::kj::Maybe< ::capnp::MessageSize> sizeHint = nullptr);\n"),
 
       kj::strTree(
