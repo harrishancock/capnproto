@@ -2161,7 +2161,12 @@ private:
   InterfaceText makeInterfaceText(kj::StringPtr scope, kj::StringPtr name, InterfaceSchema schema,
                                   kj::Array<kj::StringTree> nestedTypeDecls,
                                   const TemplateContext& templateContext) {
-    auto fullName = kj::str(scope, name, templateContext.args());
+    auto templateArgs = templateContext.args();
+    auto fullName = kj::str(scope, name, templateArgs);
+    auto fullDisambiguatedName = kj::str(
+        scope.size() ? "typename " : "", scope,
+        scope.size() && templateArgs.size() ? "template " : "", name,
+        templateArgs);
     auto methods = KJ_MAP(m, schema.getMethods()) {
       return makeMethodText(fullName, m, templateContext);
     };
@@ -2252,8 +2257,8 @@ private:
             return kj::strTree(",\n      public virtual ", s.typeName.strNoTypename(), "::Client");
           }, " {\n"
           "public:\n"
-          "  typedef ", fullName, " Calls;\n"
-          "  typedef ", fullName, " Reads;\n"
+          "  typedef ", fullDisambiguatedName, " Calls;\n"
+          "  typedef ", fullDisambiguatedName, " Reads;\n"
           "\n"
           "  Client(decltype(nullptr));\n"
           "  explicit Client(::kj::Own< ::capnp::ClientHook>&& hook);\n"
@@ -2286,7 +2291,7 @@ private:
             return kj::strTree(",\n      public virtual ", s.typeName.strNoTypename(), "::Server");
           }, " {\n"
           "public:\n",
-          "  typedef ", fullName, " Serves;\n"
+          "  typedef ", fullDisambiguatedName, " Serves;\n"
           "\n"
           "  ::kj::Promise<void> dispatchCall(uint64_t interfaceId, uint16_t methodId,\n"
           "      ::capnp::CallContext< ::capnp::AnyPointer, ::capnp::AnyPointer> context)\n"
