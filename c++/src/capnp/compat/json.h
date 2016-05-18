@@ -313,6 +313,28 @@ private:
   friend class JsonCodec;
 };
 
+template <>
+class JsonCodec::Handler<DynamicValue>: private JsonCodec::HandlerBase {
+  // Almost identical to Style::POINTER except that we pass `input` to encode unchanged.
+
+public:
+  virtual void encode(const JsonCodec& codec, DynamicValue::Reader input,
+                      JsonValue::Builder output) const = 0;
+  virtual Orphan<DynamicValue> decode(const JsonCodec& codec, JsonValue::Reader input,
+                                      Orphanage orphanage) const = 0;
+
+private:
+  void encodeBase(const JsonCodec& codec, DynamicValue::Reader input,
+                  JsonValue::Builder output) const override final {
+    encode(codec, input, output);
+  }
+  Orphan<DynamicValue> decodeBase(const JsonCodec& codec, JsonValue::Reader input,
+                                  Type type, Orphanage orphanage) const override final {
+    return decode(codec, input, orphanage);
+  }
+  friend class JsonCodec;
+};
+
 template <typename T>
 class JsonCodec::Handler<T, Style::STRUCT>: private JsonCodec::HandlerBase {
 public:

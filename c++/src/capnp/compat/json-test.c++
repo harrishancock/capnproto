@@ -714,6 +714,28 @@ KJ_TEST("register DynamicStruct handler") {
   json.addTypeHandler(Schema::from<TestAllTypes>(), handler);
 }
 
+class TestDynamicValueHandler: public JsonCodec::Handler<DynamicValue> {
+public:
+  void encode(const JsonCodec& codec, DynamicValue::Reader input,
+              JsonValue::Builder output) const override {
+    KJ_UNIMPLEMENTED("TestDynamicValueHandler::encode");
+  }
+
+  Orphan<DynamicValue> decode(const JsonCodec& codec, JsonValue::Reader input,
+                              Orphanage orphanage) const override {
+    KJ_UNIMPLEMENTED("TestDynamicValueHandler::decode");
+  }
+};
+
+KJ_TEST("register DynamicValue handler") {
+  // This test currently only checks that this compiles, which at one point wasn't the caes.
+  // TODO(test): Actually run some code here.
+
+  TestDynamicValueHandler handler;
+  JsonCodec json;
+  json.addTypeHandler(Schema::from<TestAllTypes>(), handler);
+}
+
 }  // namespace
 }  // namespace _ (private)
 }  // namespace capnp
