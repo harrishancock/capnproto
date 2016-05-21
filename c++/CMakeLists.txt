@@ -29,10 +29,6 @@ option(BUILD_TESTING "Build unit tests and enable CTest 'check' target." ON)
 option(EXTERNAL_CAPNP "Use the system capnp binary, or the one specified in $CAPNP, instead of using the compiled one." OFF)
 option(CAPNP_LITE "Compile Cap'n Proto in 'lite mode', in which all reflection APIs (schema.h, dynamic.h, etc.) are not included. Produces a smaller library at the cost of features. All programs built against the library must be compiled with -DCAPNP_LITE. Requires EXTERNAL_CAPNP." OFF)
 
-if(MSVC AND NOT CAPNP_LITE)
-  message(SEND_ERROR "Building with MSVC is only supported with CAPNP_LITE.")
-endif()
-
 if(CAPNP_LITE)
   set(CAPNP_LITE_FLAG "-DCAPNP_LITE")
   # This flag is attached as PUBLIC target_compile_definition to kj target
