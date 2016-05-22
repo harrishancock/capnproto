@@ -195,7 +195,12 @@ public:
     return castAs<Persistent<SturdyRef2, Owner2>>();
   }
 
-  ::capnp::Request<typename  ::capnp::Persistent<SturdyRef, Owner>::SaveParams, typename  ::capnp::Persistent<SturdyRef, Owner>::SaveResults> saveRequest(
+  #if _MSC_VER
+  auto
+  #else
+  ::capnp::Request<typename  ::capnp::Persistent<SturdyRef, Owner>::SaveParams, typename  ::capnp::Persistent<SturdyRef, Owner>::SaveResults>
+  #endif
+  saveRequest(
       ::kj::Maybe< ::capnp::MessageSize> sizeHint = nullptr);
 
 protected:
@@ -439,9 +444,19 @@ public:
     return castAs<RealmGateway<InternalRef2, ExternalRef2, InternalOwner2, ExternalOwner2>>();
   }
 
-  ::capnp::Request<typename  ::capnp::RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::ImportParams, typename  ::capnp::Persistent<InternalRef, InternalOwner>::SaveResults> importRequest(
+  #if _MSC_VER
+  auto
+  #else
+  ::capnp::Request<typename  ::capnp::RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::ImportParams, typename  ::capnp::Persistent<InternalRef, InternalOwner>::SaveResults>
+  #endif
+  importRequest(
       ::kj::Maybe< ::capnp::MessageSize> sizeHint = nullptr);
-  ::capnp::Request<typename  ::capnp::RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::ExportParams, typename  ::capnp::Persistent<ExternalRef, ExternalOwner>::SaveResults> exportRequest(
+  #if _MSC_VER
+  auto
+  #else
+  ::capnp::Request<typename  ::capnp::RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::ExportParams, typename  ::capnp::Persistent<ExternalRef, ExternalOwner>::SaveResults>
+  #endif
+  exportRequest(
       ::kj::Maybe< ::capnp::MessageSize> sizeHint = nullptr);
 
 protected:
@@ -798,7 +813,7 @@ const ::capnp::_::RawBrandedSchema::Binding Persistent<SturdyRef, Owner>::SavePa
 template <typename SturdyRef, typename Owner>
 const ::capnp::_::RawBrandedSchema Persistent<SturdyRef, Owner>::SaveParams::_capnpPrivate::specificBrand = {
   &::capnp::schemas::s_f76fba59183073a5, brandScopes, nullptr,
-  sizeof(brandScopes) / sizeof(brandScopes[0]), 0, nullptr
+  1, 0, nullptr
 };
 #endif  // !CAPNP_LITE
 
@@ -875,13 +890,17 @@ const ::capnp::_::RawBrandedSchema::Binding Persistent<SturdyRef, Owner>::SaveRe
 template <typename SturdyRef, typename Owner>
 const ::capnp::_::RawBrandedSchema Persistent<SturdyRef, Owner>::SaveResults::_capnpPrivate::specificBrand = {
   &::capnp::schemas::s_b76848c18c40efbf, brandScopes, nullptr,
-  sizeof(brandScopes) / sizeof(brandScopes[0]), 0, nullptr
+  1, 0, nullptr
 };
 #endif  // !CAPNP_LITE
 
 #if !CAPNP_LITE
 template <typename SturdyRef, typename Owner>
+#if _MSC_VER
+auto
+#else
 ::capnp::Request<typename  ::capnp::Persistent<SturdyRef, Owner>::SaveParams, typename  ::capnp::Persistent<SturdyRef, Owner>::SaveResults>
+#endif
 Persistent<SturdyRef, Owner>::Client::saveRequest(::kj::Maybe< ::capnp::MessageSize> sizeHint) {
   return newCall<typename  ::capnp::Persistent<SturdyRef, Owner>::SaveParams, typename  ::capnp::Persistent<SturdyRef, Owner>::SaveResults>(
       0xc8cb212fcd9f5691ull, 0, sizeHint);
@@ -943,7 +962,7 @@ const ::capnp::_::RawBrandedSchema::Dependency Persistent<SturdyRef, Owner>::_ca
 template <typename SturdyRef, typename Owner>
 const ::capnp::_::RawBrandedSchema Persistent<SturdyRef, Owner>::_capnpPrivate::specificBrand = {
   &::capnp::schemas::s_c8cb212fcd9f5691, brandScopes, brandDependencies,
-  sizeof(brandScopes) / sizeof(brandScopes[0]), sizeof(brandDependencies) / sizeof(brandDependencies[0]), nullptr
+  1, 2, nullptr
 };
 #endif  // !CAPNP_LITE
 
@@ -1099,7 +1118,7 @@ const ::capnp::_::RawBrandedSchema::Dependency RealmGateway<InternalRef, Externa
 template <typename InternalRef, typename ExternalRef, typename InternalOwner, typename ExternalOwner>
 const ::capnp::_::RawBrandedSchema RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::ImportParams::_capnpPrivate::specificBrand = {
   &::capnp::schemas::s_f0c2cc1d3909574d, brandScopes, brandDependencies,
-  sizeof(brandScopes) / sizeof(brandScopes[0]), sizeof(brandDependencies) / sizeof(brandDependencies[0]), nullptr
+  1, 2, nullptr
 };
 #endif  // !CAPNP_LITE
 
@@ -1224,13 +1243,17 @@ const ::capnp::_::RawBrandedSchema::Dependency RealmGateway<InternalRef, Externa
 template <typename InternalRef, typename ExternalRef, typename InternalOwner, typename ExternalOwner>
 const ::capnp::_::RawBrandedSchema RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::ExportParams::_capnpPrivate::specificBrand = {
   &::capnp::schemas::s_ecafa18b482da3aa, brandScopes, brandDependencies,
-  sizeof(brandScopes) / sizeof(brandScopes[0]), sizeof(brandDependencies) / sizeof(brandDependencies[0]), nullptr
+  1, 2, nullptr
 };
 #endif  // !CAPNP_LITE
 
 #if !CAPNP_LITE
 template <typename InternalRef, typename ExternalRef, typename InternalOwner, typename ExternalOwner>
+#if _MSC_VER
+auto
+#else
 ::capnp::Request<typename  ::capnp::RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::ImportParams, typename  ::capnp::Persistent<InternalRef, InternalOwner>::SaveResults>
+#endif
 RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::Client::importRequest(::kj::Maybe< ::capnp::MessageSize> sizeHint) {
   return newCall<typename  ::capnp::RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::ImportParams, typename  ::capnp::Persistent<InternalRef, InternalOwner>::SaveResults>(
       0x84ff286cd00a3ed4ull, 0, sizeHint);
@@ -1242,7 +1265,11 @@ template <typename InternalRef, typename ExternalRef, typename InternalOwner, ty
       0x84ff286cd00a3ed4ull, 0);
 }
 template <typename InternalRef, typename ExternalRef, typename InternalOwner, typename ExternalOwner>
+#if _MSC_VER
+auto
+#else
 ::capnp::Request<typename  ::capnp::RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::ExportParams, typename  ::capnp::Persistent<ExternalRef, ExternalOwner>::SaveResults>
+#endif
 RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::Client::exportRequest(::kj::Maybe< ::capnp::MessageSize> sizeHint) {
   return newCall<typename  ::capnp::RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::ExportParams, typename  ::capnp::Persistent<ExternalRef, ExternalOwner>::SaveResults>(
       0x84ff286cd00a3ed4ull, 1, sizeHint);
@@ -1311,7 +1338,7 @@ const ::capnp::_::RawBrandedSchema::Dependency RealmGateway<InternalRef, Externa
 template <typename InternalRef, typename ExternalRef, typename InternalOwner, typename ExternalOwner>
 const ::capnp::_::RawBrandedSchema RealmGateway<InternalRef, ExternalRef, InternalOwner, ExternalOwner>::_capnpPrivate::specificBrand = {
   &::capnp::schemas::s_84ff286cd00a3ed4, brandScopes, brandDependencies,
-  sizeof(brandScopes) / sizeof(brandScopes[0]), sizeof(brandDependencies) / sizeof(brandDependencies[0]), nullptr
+  1, 4, nullptr
 };
 #endif  // !CAPNP_LITE
 
