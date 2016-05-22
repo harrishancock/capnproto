@@ -227,7 +227,7 @@ inline const RawSchema& rawSchema() {
 
 template <typename T, typename CapnpPrivate = typename T::_capnpPrivate>
 inline const RawBrandedSchema& rawBrandedSchema() {
-  return *CapnpPrivate::brand;
+  return CapnpPrivate::brand();
 }
 template <typename T, uint64_t id = schemas::EnumInfo<T>::typeId>
 inline const RawBrandedSchema& rawBrandedSchema() {

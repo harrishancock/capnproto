@@ -60,7 +60,9 @@ struct ChooseBrand;
 template <typename TypeTag>
 struct ChooseBrand<TypeTag> {
   // All params were AnyPointer. No specific brand needed.
-  static constexpr _::RawBrandedSchema const* brand = &TypeTag::schema->defaultBrand;
+  static _::RawBrandedSchema const& brand() {
+    return TypeTag::schema->defaultBrand;
+  }
 };
 
 template <typename TypeTag, typename... Rest>
@@ -70,7 +72,9 @@ struct ChooseBrand<TypeTag, AnyPointer, Rest...>: public ChooseBrand<TypeTag, Re
 template <typename TypeTag, typename First, typename... Rest>
 struct ChooseBrand<TypeTag, First, Rest...> {
   // At least one parameter is not AnyPointer, so use the specificBrand constant.
-  static constexpr _::RawBrandedSchema const* brand = &TypeTag::specificBrand;
+  static _::RawBrandedSchema const& brand() {
+    return TypeTag::specificBrand;
+  }
 };
 
 template <typename T, Kind k = kind<T>()>
@@ -128,14 +132,14 @@ struct BrandBindingFor_<T, Kind::ENUM> {
 template <typename T>
 struct BrandBindingFor_<T, Kind::STRUCT> {
   static constexpr RawBrandedSchema::Binding get(uint16_t listDepth) {
-    return { 16, listDepth, T::_capnpPrivate::brand };
+    return { 16, listDepth, &T::_capnpPrivate::brand() };
   }
 };
 
 template <typename T>
 struct BrandBindingFor_<T, Kind::INTERFACE> {
   static constexpr RawBrandedSchema::Binding get(uint16_t listDepth) {
-    return { 17, listDepth, T::_capnpPrivate::brand };
+    return { 17, listDepth, &T::_capnpPrivate::brand() };
   }
 };
 
