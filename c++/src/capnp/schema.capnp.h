@@ -91,7 +91,9 @@ struct Node {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(e682ab4cf923a417, 5, 6)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -106,7 +108,9 @@ struct Node::Parameter {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(b9521bccf10fa3b1, 0, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -121,7 +125,9 @@ struct Node::NestedNode {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(debf55bbfa0fc242, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -136,7 +142,9 @@ struct Node::Struct {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(9ea0b19b37fb4435, 5, 6)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -151,7 +159,9 @@ struct Node::Enum {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(b54ab3364333f598, 5, 6)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -166,7 +176,9 @@ struct Node::Interface {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(e82753cff0c2218f, 5, 6)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -181,7 +193,9 @@ struct Node::Const {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(b18aa5ac7a0d9420, 5, 6)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -196,7 +210,9 @@ struct Node::Annotation {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(ec1619d4400a0290, 5, 6)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -219,7 +235,9 @@ struct Field {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(9aad50a41f4af45f, 3, 4)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -234,7 +252,9 @@ struct Field::Slot {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(c42305476bb4746f, 3, 4)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -249,7 +269,9 @@ struct Field::Group {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(cafccddb68db1d11, 3, 4)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -268,7 +290,9 @@ struct Field::Ordinal {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(bb90d5c287870be6, 3, 4)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -283,7 +307,9 @@ struct Enumerant {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(978a7cebdc549a4d, 1, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -298,7 +324,9 @@ struct Superclass {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(a9962a9ed0a4d7f8, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -313,7 +341,9 @@ struct Method {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(9500cce23b334d80, 3, 5)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -354,7 +384,9 @@ struct Type {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(d07378ede1f9cc60, 3, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -369,7 +401,9 @@ struct Type::List {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(87e739250a60ea97, 3, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -384,7 +418,9 @@ struct Type::Enum {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(9e0e78711a7f87a9, 3, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -399,7 +435,9 @@ struct Type::Struct {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(ac3a6f60ef4cc6d3, 3, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -414,7 +452,9 @@ struct Type::Interface {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(ed8bca69f7fb0cbf, 3, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -437,7 +477,9 @@ struct Type::AnyPointer {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(c2573fe8a23e49f1, 3, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -458,7 +500,9 @@ struct Type::AnyPointer::Unconstrained {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(8e3b5f79fe593656, 3, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -473,7 +517,9 @@ struct Type::AnyPointer::Parameter {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(9dd1f724f4614a85, 3, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -488,7 +534,9 @@ struct Type::AnyPointer::ImplicitMethodParameter {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(baefc9120c56e274, 3, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -505,7 +553,9 @@ struct Brand {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(903455f06065422b, 0, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -524,7 +574,9 @@ struct Brand::Scope {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(abd73485a9636bc9, 2, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -543,7 +595,9 @@ struct Brand::Binding {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(c863cd16969ee7fc, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -579,7 +633,9 @@ struct Value {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(ce23dcd2d7b00c9b, 2, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -594,7 +650,9 @@ struct Annotation {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(f1c8950dab257542, 1, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -612,7 +670,9 @@ struct CodeGeneratorRequest {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(bfc546f6210ad7ce, 0, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -628,7 +688,9 @@ struct CodeGeneratorRequest::RequestedFile {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(cfea0eb02e810062, 1, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -643,7 +705,9 @@ struct CodeGeneratorRequest::RequestedFile::Import {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(ae504193122357e5, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -663,7 +727,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -687,19 +751,19 @@ public:
   inline  ::capnp::Void getFile() const;
 
   inline bool isStruct() const;
-  inline Struct::Reader getStruct() const;
+  inline typename Struct::Reader getStruct() const;
 
   inline bool isEnum() const;
-  inline Enum::Reader getEnum() const;
+  inline typename Enum::Reader getEnum() const;
 
   inline bool isInterface() const;
-  inline Interface::Reader getInterface() const;
+  inline typename Interface::Reader getInterface() const;
 
   inline bool isConst() const;
-  inline Const::Reader getConst() const;
+  inline typename Const::Reader getConst() const;
 
   inline bool isAnnotation() const;
-  inline Annotation::Reader getAnnotation() const;
+  inline typename Annotation::Reader getAnnotation() const;
 
   inline bool hasParameters() const;
   inline  ::capnp::List< ::capnp::schema::Node::Parameter>::Reader getParameters() const;
@@ -770,24 +834,24 @@ public:
   inline void setFile( ::capnp::Void value = ::capnp::VOID);
 
   inline bool isStruct();
-  inline Struct::Builder getStruct();
-  inline Struct::Builder initStruct();
+  inline typename Struct::Builder getStruct();
+  inline typename Struct::Builder initStruct();
 
   inline bool isEnum();
-  inline Enum::Builder getEnum();
-  inline Enum::Builder initEnum();
+  inline typename Enum::Builder getEnum();
+  inline typename Enum::Builder initEnum();
 
   inline bool isInterface();
-  inline Interface::Builder getInterface();
-  inline Interface::Builder initInterface();
+  inline typename Interface::Builder getInterface();
+  inline typename Interface::Builder initInterface();
 
   inline bool isConst();
-  inline Const::Builder getConst();
-  inline Const::Builder initConst();
+  inline typename Const::Builder getConst();
+  inline typename Const::Builder initConst();
 
   inline bool isAnnotation();
-  inline Annotation::Builder getAnnotation();
-  inline Annotation::Builder initAnnotation();
+  inline typename Annotation::Builder getAnnotation();
+  inline typename Annotation::Builder initAnnotation();
 
   inline bool hasParameters();
   inline  ::capnp::List< ::capnp::schema::Node::Parameter>::Builder getParameters();
@@ -838,7 +902,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -919,7 +983,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1005,7 +1069,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1116,7 +1180,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1197,7 +1261,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1288,7 +1352,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1381,7 +1445,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1523,7 +1587,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1539,12 +1603,12 @@ public:
   inline  ::uint16_t getDiscriminantValue() const;
 
   inline bool isSlot() const;
-  inline Slot::Reader getSlot() const;
+  inline typename Slot::Reader getSlot() const;
 
   inline bool isGroup() const;
-  inline Group::Reader getGroup() const;
+  inline typename Group::Reader getGroup() const;
 
-  inline Ordinal::Reader getOrdinal() const;
+  inline typename Ordinal::Reader getOrdinal() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1596,15 +1660,15 @@ public:
   inline void setDiscriminantValue( ::uint16_t value);
 
   inline bool isSlot();
-  inline Slot::Builder getSlot();
-  inline Slot::Builder initSlot();
+  inline typename Slot::Builder getSlot();
+  inline typename Slot::Builder initSlot();
 
   inline bool isGroup();
-  inline Group::Builder getGroup();
-  inline Group::Builder initGroup();
+  inline typename Group::Builder getGroup();
+  inline typename Group::Builder initGroup();
 
-  inline Ordinal::Builder getOrdinal();
-  inline Ordinal::Builder initOrdinal();
+  inline typename Ordinal::Builder getOrdinal();
+  inline typename Ordinal::Builder initOrdinal();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1624,7 +1688,7 @@ public:
   inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
       : _typeless(kj::mv(typeless)) {}
 
-  inline Ordinal::Pipeline getOrdinal();
+  inline typename Ordinal::Pipeline getOrdinal();
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -1646,7 +1710,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1749,7 +1813,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1825,7 +1889,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1912,7 +1976,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2008,7 +2072,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2095,7 +2159,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2233,7 +2297,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2281,19 +2345,19 @@ public:
   inline  ::capnp::Void getData() const;
 
   inline bool isList() const;
-  inline List::Reader getList() const;
+  inline typename List::Reader getList() const;
 
   inline bool isEnum() const;
-  inline Enum::Reader getEnum() const;
+  inline typename Enum::Reader getEnum() const;
 
   inline bool isStruct() const;
-  inline Struct::Reader getStruct() const;
+  inline typename Struct::Reader getStruct() const;
 
   inline bool isInterface() const;
-  inline Interface::Reader getInterface() const;
+  inline typename Interface::Reader getInterface() const;
 
   inline bool isAnyPointer() const;
-  inline AnyPointer::Reader getAnyPointer() const;
+  inline typename AnyPointer::Reader getAnyPointer() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -2381,24 +2445,24 @@ public:
   inline void setData( ::capnp::Void value = ::capnp::VOID);
 
   inline bool isList();
-  inline List::Builder getList();
-  inline List::Builder initList();
+  inline typename List::Builder getList();
+  inline typename List::Builder initList();
 
   inline bool isEnum();
-  inline Enum::Builder getEnum();
-  inline Enum::Builder initEnum();
+  inline typename Enum::Builder getEnum();
+  inline typename Enum::Builder initEnum();
 
   inline bool isStruct();
-  inline Struct::Builder getStruct();
-  inline Struct::Builder initStruct();
+  inline typename Struct::Builder getStruct();
+  inline typename Struct::Builder initStruct();
 
   inline bool isInterface();
-  inline Interface::Builder getInterface();
-  inline Interface::Builder initInterface();
+  inline typename Interface::Builder getInterface();
+  inline typename Interface::Builder initInterface();
 
   inline bool isAnyPointer();
-  inline AnyPointer::Builder getAnyPointer();
-  inline AnyPointer::Builder initAnyPointer();
+  inline typename AnyPointer::Builder getAnyPointer();
+  inline typename AnyPointer::Builder initAnyPointer();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -2439,7 +2503,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2521,7 +2585,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2608,7 +2672,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2695,7 +2759,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2782,19 +2846,19 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
   inline Which which() const;
   inline bool isUnconstrained() const;
-  inline Unconstrained::Reader getUnconstrained() const;
+  inline typename Unconstrained::Reader getUnconstrained() const;
 
   inline bool isParameter() const;
-  inline Parameter::Reader getParameter() const;
+  inline typename Parameter::Reader getParameter() const;
 
   inline bool isImplicitMethodParameter() const;
-  inline ImplicitMethodParameter::Reader getImplicitMethodParameter() const;
+  inline typename ImplicitMethodParameter::Reader getImplicitMethodParameter() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -2826,16 +2890,16 @@ public:
 
   inline Which which();
   inline bool isUnconstrained();
-  inline Unconstrained::Builder getUnconstrained();
-  inline Unconstrained::Builder initUnconstrained();
+  inline typename Unconstrained::Builder getUnconstrained();
+  inline typename Unconstrained::Builder initUnconstrained();
 
   inline bool isParameter();
-  inline Parameter::Builder getParameter();
-  inline Parameter::Builder initParameter();
+  inline typename Parameter::Builder getParameter();
+  inline typename Parameter::Builder initParameter();
 
   inline bool isImplicitMethodParameter();
-  inline ImplicitMethodParameter::Builder getImplicitMethodParameter();
-  inline ImplicitMethodParameter::Builder initImplicitMethodParameter();
+  inline typename ImplicitMethodParameter::Builder getImplicitMethodParameter();
+  inline typename ImplicitMethodParameter::Builder initImplicitMethodParameter();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -2876,7 +2940,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2977,7 +3041,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -3058,7 +3122,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -3134,7 +3198,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -3215,7 +3279,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -3312,7 +3376,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -3404,7 +3468,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -3626,7 +3690,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -3724,7 +3788,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -3815,7 +3879,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -3911,7 +3975,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -4163,17 +4227,17 @@ inline bool Node::Reader::isStruct() const {
 inline bool Node::Builder::isStruct() {
   return which() == Node::STRUCT;
 }
-inline Node::Struct::Reader Node::Reader::getStruct() const {
+inline typename Node::Struct::Reader Node::Reader::getStruct() const {
   KJ_IREQUIRE((which() == Node::STRUCT),
               "Must check which() before get()ing a union member.");
   return Node::Struct::Reader(_reader);
 }
-inline Node::Struct::Builder Node::Builder::getStruct() {
+inline typename Node::Struct::Builder Node::Builder::getStruct() {
   KJ_IREQUIRE((which() == Node::STRUCT),
               "Must check which() before get()ing a union member.");
   return Node::Struct::Builder(_builder);
 }
-inline Node::Struct::Builder Node::Builder::initStruct() {
+inline typename Node::Struct::Builder Node::Builder::initStruct() {
   _builder.setDataField<Node::Which>(
       6 * ::capnp::ELEMENTS, Node::STRUCT);
   _builder.setDataField< ::uint16_t>(7 * ::capnp::ELEMENTS, 0);
@@ -4191,17 +4255,17 @@ inline bool Node::Reader::isEnum() const {
 inline bool Node::Builder::isEnum() {
   return which() == Node::ENUM;
 }
-inline Node::Enum::Reader Node::Reader::getEnum() const {
+inline typename Node::Enum::Reader Node::Reader::getEnum() const {
   KJ_IREQUIRE((which() == Node::ENUM),
               "Must check which() before get()ing a union member.");
   return Node::Enum::Reader(_reader);
 }
-inline Node::Enum::Builder Node::Builder::getEnum() {
+inline typename Node::Enum::Builder Node::Builder::getEnum() {
   KJ_IREQUIRE((which() == Node::ENUM),
               "Must check which() before get()ing a union member.");
   return Node::Enum::Builder(_builder);
 }
-inline Node::Enum::Builder Node::Builder::initEnum() {
+inline typename Node::Enum::Builder Node::Builder::initEnum() {
   _builder.setDataField<Node::Which>(
       6 * ::capnp::ELEMENTS, Node::ENUM);
   _builder.getPointerField(3 * ::capnp::POINTERS).clear();
@@ -4213,17 +4277,17 @@ inline bool Node::Reader::isInterface() const {
 inline bool Node::Builder::isInterface() {
   return which() == Node::INTERFACE;
 }
-inline Node::Interface::Reader Node::Reader::getInterface() const {
+inline typename Node::Interface::Reader Node::Reader::getInterface() const {
   KJ_IREQUIRE((which() == Node::INTERFACE),
               "Must check which() before get()ing a union member.");
   return Node::Interface::Reader(_reader);
 }
-inline Node::Interface::Builder Node::Builder::getInterface() {
+inline typename Node::Interface::Builder Node::Builder::getInterface() {
   KJ_IREQUIRE((which() == Node::INTERFACE),
               "Must check which() before get()ing a union member.");
   return Node::Interface::Builder(_builder);
 }
-inline Node::Interface::Builder Node::Builder::initInterface() {
+inline typename Node::Interface::Builder Node::Builder::initInterface() {
   _builder.setDataField<Node::Which>(
       6 * ::capnp::ELEMENTS, Node::INTERFACE);
   _builder.getPointerField(3 * ::capnp::POINTERS).clear();
@@ -4236,17 +4300,17 @@ inline bool Node::Reader::isConst() const {
 inline bool Node::Builder::isConst() {
   return which() == Node::CONST;
 }
-inline Node::Const::Reader Node::Reader::getConst() const {
+inline typename Node::Const::Reader Node::Reader::getConst() const {
   KJ_IREQUIRE((which() == Node::CONST),
               "Must check which() before get()ing a union member.");
   return Node::Const::Reader(_reader);
 }
-inline Node::Const::Builder Node::Builder::getConst() {
+inline typename Node::Const::Builder Node::Builder::getConst() {
   KJ_IREQUIRE((which() == Node::CONST),
               "Must check which() before get()ing a union member.");
   return Node::Const::Builder(_builder);
 }
-inline Node::Const::Builder Node::Builder::initConst() {
+inline typename Node::Const::Builder Node::Builder::initConst() {
   _builder.setDataField<Node::Which>(
       6 * ::capnp::ELEMENTS, Node::CONST);
   _builder.getPointerField(3 * ::capnp::POINTERS).clear();
@@ -4259,17 +4323,17 @@ inline bool Node::Reader::isAnnotation() const {
 inline bool Node::Builder::isAnnotation() {
   return which() == Node::ANNOTATION;
 }
-inline Node::Annotation::Reader Node::Reader::getAnnotation() const {
+inline typename Node::Annotation::Reader Node::Reader::getAnnotation() const {
   KJ_IREQUIRE((which() == Node::ANNOTATION),
               "Must check which() before get()ing a union member.");
   return Node::Annotation::Reader(_reader);
 }
-inline Node::Annotation::Builder Node::Builder::getAnnotation() {
+inline typename Node::Annotation::Builder Node::Builder::getAnnotation() {
   KJ_IREQUIRE((which() == Node::ANNOTATION),
               "Must check which() before get()ing a union member.");
   return Node::Annotation::Builder(_builder);
 }
-inline Node::Annotation::Builder Node::Builder::initAnnotation() {
+inline typename Node::Annotation::Builder Node::Builder::initAnnotation() {
   _builder.setDataField<Node::Which>(
       6 * ::capnp::ELEMENTS, Node::ANNOTATION);
   _builder.setDataField<bool>(112 * ::capnp::ELEMENTS, 0);
@@ -5007,17 +5071,17 @@ inline bool Field::Reader::isSlot() const {
 inline bool Field::Builder::isSlot() {
   return which() == Field::SLOT;
 }
-inline Field::Slot::Reader Field::Reader::getSlot() const {
+inline typename Field::Slot::Reader Field::Reader::getSlot() const {
   KJ_IREQUIRE((which() == Field::SLOT),
               "Must check which() before get()ing a union member.");
   return Field::Slot::Reader(_reader);
 }
-inline Field::Slot::Builder Field::Builder::getSlot() {
+inline typename Field::Slot::Builder Field::Builder::getSlot() {
   KJ_IREQUIRE((which() == Field::SLOT),
               "Must check which() before get()ing a union member.");
   return Field::Slot::Builder(_builder);
 }
-inline Field::Slot::Builder Field::Builder::initSlot() {
+inline typename Field::Slot::Builder Field::Builder::initSlot() {
   _builder.setDataField<Field::Which>(
       4 * ::capnp::ELEMENTS, Field::SLOT);
   _builder.setDataField< ::uint32_t>(1 * ::capnp::ELEMENTS, 0);
@@ -5032,34 +5096,34 @@ inline bool Field::Reader::isGroup() const {
 inline bool Field::Builder::isGroup() {
   return which() == Field::GROUP;
 }
-inline Field::Group::Reader Field::Reader::getGroup() const {
+inline typename Field::Group::Reader Field::Reader::getGroup() const {
   KJ_IREQUIRE((which() == Field::GROUP),
               "Must check which() before get()ing a union member.");
   return Field::Group::Reader(_reader);
 }
-inline Field::Group::Builder Field::Builder::getGroup() {
+inline typename Field::Group::Builder Field::Builder::getGroup() {
   KJ_IREQUIRE((which() == Field::GROUP),
               "Must check which() before get()ing a union member.");
   return Field::Group::Builder(_builder);
 }
-inline Field::Group::Builder Field::Builder::initGroup() {
+inline typename Field::Group::Builder Field::Builder::initGroup() {
   _builder.setDataField<Field::Which>(
       4 * ::capnp::ELEMENTS, Field::GROUP);
   _builder.setDataField< ::uint64_t>(2 * ::capnp::ELEMENTS, 0);
   return Field::Group::Builder(_builder);
 }
-inline Field::Ordinal::Reader Field::Reader::getOrdinal() const {
+inline typename Field::Ordinal::Reader Field::Reader::getOrdinal() const {
   return Field::Ordinal::Reader(_reader);
 }
-inline Field::Ordinal::Builder Field::Builder::getOrdinal() {
+inline typename Field::Ordinal::Builder Field::Builder::getOrdinal() {
   return Field::Ordinal::Builder(_builder);
 }
 #if !CAPNP_LITE
-inline Field::Ordinal::Pipeline Field::Pipeline::getOrdinal() {
+inline typename Field::Ordinal::Pipeline Field::Pipeline::getOrdinal() {
   return Field::Ordinal::Pipeline(_typeless.noop());
 }
 #endif  // !CAPNP_LITE
-inline Field::Ordinal::Builder Field::Builder::initOrdinal() {
+inline typename Field::Ordinal::Builder Field::Builder::initOrdinal() {
   _builder.setDataField< ::uint16_t>(5 * ::capnp::ELEMENTS, 0);
   _builder.setDataField< ::uint16_t>(6 * ::capnp::ELEMENTS, 0);
   return Field::Ordinal::Builder(_builder);
@@ -5957,17 +6021,17 @@ inline bool Type::Reader::isList() const {
 inline bool Type::Builder::isList() {
   return which() == Type::LIST;
 }
-inline Type::List::Reader Type::Reader::getList() const {
+inline typename Type::List::Reader Type::Reader::getList() const {
   KJ_IREQUIRE((which() == Type::LIST),
               "Must check which() before get()ing a union member.");
   return Type::List::Reader(_reader);
 }
-inline Type::List::Builder Type::Builder::getList() {
+inline typename Type::List::Builder Type::Builder::getList() {
   KJ_IREQUIRE((which() == Type::LIST),
               "Must check which() before get()ing a union member.");
   return Type::List::Builder(_builder);
 }
-inline Type::List::Builder Type::Builder::initList() {
+inline typename Type::List::Builder Type::Builder::initList() {
   _builder.setDataField<Type::Which>(
       0 * ::capnp::ELEMENTS, Type::LIST);
   _builder.getPointerField(0 * ::capnp::POINTERS).clear();
@@ -5979,17 +6043,17 @@ inline bool Type::Reader::isEnum() const {
 inline bool Type::Builder::isEnum() {
   return which() == Type::ENUM;
 }
-inline Type::Enum::Reader Type::Reader::getEnum() const {
+inline typename Type::Enum::Reader Type::Reader::getEnum() const {
   KJ_IREQUIRE((which() == Type::ENUM),
               "Must check which() before get()ing a union member.");
   return Type::Enum::Reader(_reader);
 }
-inline Type::Enum::Builder Type::Builder::getEnum() {
+inline typename Type::Enum::Builder Type::Builder::getEnum() {
   KJ_IREQUIRE((which() == Type::ENUM),
               "Must check which() before get()ing a union member.");
   return Type::Enum::Builder(_builder);
 }
-inline Type::Enum::Builder Type::Builder::initEnum() {
+inline typename Type::Enum::Builder Type::Builder::initEnum() {
   _builder.setDataField<Type::Which>(
       0 * ::capnp::ELEMENTS, Type::ENUM);
   _builder.setDataField< ::uint64_t>(1 * ::capnp::ELEMENTS, 0);
@@ -6002,17 +6066,17 @@ inline bool Type::Reader::isStruct() const {
 inline bool Type::Builder::isStruct() {
   return which() == Type::STRUCT;
 }
-inline Type::Struct::Reader Type::Reader::getStruct() const {
+inline typename Type::Struct::Reader Type::Reader::getStruct() const {
   KJ_IREQUIRE((which() == Type::STRUCT),
               "Must check which() before get()ing a union member.");
   return Type::Struct::Reader(_reader);
 }
-inline Type::Struct::Builder Type::Builder::getStruct() {
+inline typename Type::Struct::Builder Type::Builder::getStruct() {
   KJ_IREQUIRE((which() == Type::STRUCT),
               "Must check which() before get()ing a union member.");
   return Type::Struct::Builder(_builder);
 }
-inline Type::Struct::Builder Type::Builder::initStruct() {
+inline typename Type::Struct::Builder Type::Builder::initStruct() {
   _builder.setDataField<Type::Which>(
       0 * ::capnp::ELEMENTS, Type::STRUCT);
   _builder.setDataField< ::uint64_t>(1 * ::capnp::ELEMENTS, 0);
@@ -6025,17 +6089,17 @@ inline bool Type::Reader::isInterface() const {
 inline bool Type::Builder::isInterface() {
   return which() == Type::INTERFACE;
 }
-inline Type::Interface::Reader Type::Reader::getInterface() const {
+inline typename Type::Interface::Reader Type::Reader::getInterface() const {
   KJ_IREQUIRE((which() == Type::INTERFACE),
               "Must check which() before get()ing a union member.");
   return Type::Interface::Reader(_reader);
 }
-inline Type::Interface::Builder Type::Builder::getInterface() {
+inline typename Type::Interface::Builder Type::Builder::getInterface() {
   KJ_IREQUIRE((which() == Type::INTERFACE),
               "Must check which() before get()ing a union member.");
   return Type::Interface::Builder(_builder);
 }
-inline Type::Interface::Builder Type::Builder::initInterface() {
+inline typename Type::Interface::Builder Type::Builder::initInterface() {
   _builder.setDataField<Type::Which>(
       0 * ::capnp::ELEMENTS, Type::INTERFACE);
   _builder.setDataField< ::uint64_t>(1 * ::capnp::ELEMENTS, 0);
@@ -6048,17 +6112,17 @@ inline bool Type::Reader::isAnyPointer() const {
 inline bool Type::Builder::isAnyPointer() {
   return which() == Type::ANY_POINTER;
 }
-inline Type::AnyPointer::Reader Type::Reader::getAnyPointer() const {
+inline typename Type::AnyPointer::Reader Type::Reader::getAnyPointer() const {
   KJ_IREQUIRE((which() == Type::ANY_POINTER),
               "Must check which() before get()ing a union member.");
   return Type::AnyPointer::Reader(_reader);
 }
-inline Type::AnyPointer::Builder Type::Builder::getAnyPointer() {
+inline typename Type::AnyPointer::Builder Type::Builder::getAnyPointer() {
   KJ_IREQUIRE((which() == Type::ANY_POINTER),
               "Must check which() before get()ing a union member.");
   return Type::AnyPointer::Builder(_builder);
 }
-inline Type::AnyPointer::Builder Type::Builder::initAnyPointer() {
+inline typename Type::AnyPointer::Builder Type::Builder::initAnyPointer() {
   _builder.setDataField<Type::Which>(
       0 * ::capnp::ELEMENTS, Type::ANY_POINTER);
   _builder.setDataField< ::uint16_t>(4 * ::capnp::ELEMENTS, 0);
@@ -6269,17 +6333,17 @@ inline bool Type::AnyPointer::Reader::isUnconstrained() const {
 inline bool Type::AnyPointer::Builder::isUnconstrained() {
   return which() == Type::AnyPointer::UNCONSTRAINED;
 }
-inline Type::AnyPointer::Unconstrained::Reader Type::AnyPointer::Reader::getUnconstrained() const {
+inline typename Type::AnyPointer::Unconstrained::Reader Type::AnyPointer::Reader::getUnconstrained() const {
   KJ_IREQUIRE((which() == Type::AnyPointer::UNCONSTRAINED),
               "Must check which() before get()ing a union member.");
   return Type::AnyPointer::Unconstrained::Reader(_reader);
 }
-inline Type::AnyPointer::Unconstrained::Builder Type::AnyPointer::Builder::getUnconstrained() {
+inline typename Type::AnyPointer::Unconstrained::Builder Type::AnyPointer::Builder::getUnconstrained() {
   KJ_IREQUIRE((which() == Type::AnyPointer::UNCONSTRAINED),
               "Must check which() before get()ing a union member.");
   return Type::AnyPointer::Unconstrained::Builder(_builder);
 }
-inline Type::AnyPointer::Unconstrained::Builder Type::AnyPointer::Builder::initUnconstrained() {
+inline typename Type::AnyPointer::Unconstrained::Builder Type::AnyPointer::Builder::initUnconstrained() {
   _builder.setDataField<Type::AnyPointer::Which>(
       4 * ::capnp::ELEMENTS, Type::AnyPointer::UNCONSTRAINED);
   _builder.setDataField< ::uint16_t>(5 * ::capnp::ELEMENTS, 0);
@@ -6291,17 +6355,17 @@ inline bool Type::AnyPointer::Reader::isParameter() const {
 inline bool Type::AnyPointer::Builder::isParameter() {
   return which() == Type::AnyPointer::PARAMETER;
 }
-inline Type::AnyPointer::Parameter::Reader Type::AnyPointer::Reader::getParameter() const {
+inline typename Type::AnyPointer::Parameter::Reader Type::AnyPointer::Reader::getParameter() const {
   KJ_IREQUIRE((which() == Type::AnyPointer::PARAMETER),
               "Must check which() before get()ing a union member.");
   return Type::AnyPointer::Parameter::Reader(_reader);
 }
-inline Type::AnyPointer::Parameter::Builder Type::AnyPointer::Builder::getParameter() {
+inline typename Type::AnyPointer::Parameter::Builder Type::AnyPointer::Builder::getParameter() {
   KJ_IREQUIRE((which() == Type::AnyPointer::PARAMETER),
               "Must check which() before get()ing a union member.");
   return Type::AnyPointer::Parameter::Builder(_builder);
 }
-inline Type::AnyPointer::Parameter::Builder Type::AnyPointer::Builder::initParameter() {
+inline typename Type::AnyPointer::Parameter::Builder Type::AnyPointer::Builder::initParameter() {
   _builder.setDataField<Type::AnyPointer::Which>(
       4 * ::capnp::ELEMENTS, Type::AnyPointer::PARAMETER);
   _builder.setDataField< ::uint16_t>(5 * ::capnp::ELEMENTS, 0);
@@ -6314,17 +6378,17 @@ inline bool Type::AnyPointer::Reader::isImplicitMethodParameter() const {
 inline bool Type::AnyPointer::Builder::isImplicitMethodParameter() {
   return which() == Type::AnyPointer::IMPLICIT_METHOD_PARAMETER;
 }
-inline Type::AnyPointer::ImplicitMethodParameter::Reader Type::AnyPointer::Reader::getImplicitMethodParameter() const {
+inline typename Type::AnyPointer::ImplicitMethodParameter::Reader Type::AnyPointer::Reader::getImplicitMethodParameter() const {
   KJ_IREQUIRE((which() == Type::AnyPointer::IMPLICIT_METHOD_PARAMETER),
               "Must check which() before get()ing a union member.");
   return Type::AnyPointer::ImplicitMethodParameter::Reader(_reader);
 }
-inline Type::AnyPointer::ImplicitMethodParameter::Builder Type::AnyPointer::Builder::getImplicitMethodParameter() {
+inline typename Type::AnyPointer::ImplicitMethodParameter::Builder Type::AnyPointer::Builder::getImplicitMethodParameter() {
   KJ_IREQUIRE((which() == Type::AnyPointer::IMPLICIT_METHOD_PARAMETER),
               "Must check which() before get()ing a union member.");
   return Type::AnyPointer::ImplicitMethodParameter::Builder(_builder);
 }
-inline Type::AnyPointer::ImplicitMethodParameter::Builder Type::AnyPointer::Builder::initImplicitMethodParameter() {
+inline typename Type::AnyPointer::ImplicitMethodParameter::Builder Type::AnyPointer::Builder::initImplicitMethodParameter() {
   _builder.setDataField<Type::AnyPointer::Which>(
       4 * ::capnp::ELEMENTS, Type::AnyPointer::IMPLICIT_METHOD_PARAMETER);
   _builder.setDataField< ::uint16_t>(5 * ::capnp::ELEMENTS, 0);

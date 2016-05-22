@@ -46,7 +46,9 @@ struct VatId {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(d20b909fee733a8e, 1, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -61,7 +63,9 @@ struct ProvisionId {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(b88d09a9c5f39817, 1, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -76,7 +80,9 @@ struct RecipientId {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(89f389b6fd4082c1, 0, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -91,7 +97,9 @@ struct ThirdPartyCapId {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(b47f4979672cb59d, 0, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -106,7 +114,9 @@ struct JoinKeyPart {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(95b29059097fca83, 1, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -121,7 +131,9 @@ struct JoinResult {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(9d263a3630b7ebee, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -141,7 +153,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -217,7 +229,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -293,7 +305,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -364,7 +376,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -435,7 +447,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -521,7 +533,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 

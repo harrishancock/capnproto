@@ -75,7 +75,9 @@ struct Message {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(91b79f1f808db032, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -90,7 +92,9 @@ struct Bootstrap {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(e94ccf8031176ec4, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -106,7 +110,9 @@ struct Call {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(836a53ce789d4cd4, 3, 3)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -126,7 +132,9 @@ struct Call::SendResultsTo {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(dae8b0f61aab5f99, 3, 3)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -149,7 +157,9 @@ struct Return {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(9e19b28d3db3573a, 2, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -164,7 +174,9 @@ struct Finish {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(d37d2eb2c2f80e63, 1, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -183,7 +195,9 @@ struct Resolve {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(bbc29655fa89086e, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -198,7 +212,9 @@ struct Release {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(ad1a6c0d7dd07497, 1, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -214,7 +230,9 @@ struct Disembargo {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(f964368b0fbd3711, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -235,7 +253,9 @@ struct Disembargo::Context {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(d562b4df655bdd4d, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -250,7 +270,9 @@ struct Provide {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(9c6a046bfbc1ac5a, 1, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -265,7 +287,9 @@ struct Accept {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(d4c9b56290554016, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -280,7 +304,9 @@ struct Join {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(fbe1980490e001af, 1, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -299,7 +325,9 @@ struct MessageTarget {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(95bc14545813fbc1, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -314,7 +342,9 @@ struct Payload {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(9a0e61223d96743b, 0, 2)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -337,7 +367,9 @@ struct CapDescriptor {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(8523ddc40b86b8b0, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -353,7 +385,9 @@ struct PromisedAnswer {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(d800b1d6cd6f1ca0, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -372,7 +406,9 @@ struct PromisedAnswer::Op {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(f316944415569081, 1, 0)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -387,7 +423,9 @@ struct ThirdPartyCapDescriptor {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(d37007fde1f0027d, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -404,7 +442,9 @@ struct Exception {
   struct _capnpPrivate {
     CAPNP_DECLARE_STRUCT_HEADER(d625b7063acf691a, 1, 1)
     #if !CAPNP_LITE
-    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;
+    static ::capnp::_::RawBrandedSchema const& brand() {
+      return schema->defaultBrand;
+    }
     #endif  // !CAPNP_LITE
   };
 };
@@ -424,7 +464,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -659,7 +699,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -742,7 +782,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -758,7 +798,7 @@ public:
   inline bool hasParams() const;
   inline  ::capnp::rpc::Payload::Reader getParams() const;
 
-  inline SendResultsTo::Reader getSendResultsTo() const;
+  inline typename SendResultsTo::Reader getSendResultsTo() const;
 
   inline bool getAllowThirdPartyTailCall() const;
 
@@ -813,8 +853,8 @@ public:
   inline void adoptParams(::capnp::Orphan< ::capnp::rpc::Payload>&& value);
   inline ::capnp::Orphan< ::capnp::rpc::Payload> disownParams();
 
-  inline SendResultsTo::Builder getSendResultsTo();
-  inline SendResultsTo::Builder initSendResultsTo();
+  inline typename SendResultsTo::Builder getSendResultsTo();
+  inline typename SendResultsTo::Builder initSendResultsTo();
 
   inline bool getAllowThirdPartyTailCall();
   inline void setAllowThirdPartyTailCall(bool value);
@@ -839,7 +879,7 @@ public:
 
   inline  ::capnp::rpc::MessageTarget::Pipeline getTarget();
   inline  ::capnp::rpc::Payload::Pipeline getParams();
-  inline SendResultsTo::Pipeline getSendResultsTo();
+  inline typename SendResultsTo::Pipeline getSendResultsTo();
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -861,7 +901,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -957,7 +997,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1094,7 +1134,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1175,7 +1215,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1277,7 +1317,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1358,14 +1398,14 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
   inline bool hasTarget() const;
   inline  ::capnp::rpc::MessageTarget::Reader getTarget() const;
 
-  inline Context::Reader getContext() const;
+  inline typename Context::Reader getContext() const;
 
 private:
   ::capnp::_::StructReader _reader;
@@ -1402,8 +1442,8 @@ public:
   inline void adoptTarget(::capnp::Orphan< ::capnp::rpc::MessageTarget>&& value);
   inline ::capnp::Orphan< ::capnp::rpc::MessageTarget> disownTarget();
 
-  inline Context::Builder getContext();
-  inline Context::Builder initContext();
+  inline typename Context::Builder getContext();
+  inline typename Context::Builder initContext();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -1424,7 +1464,7 @@ public:
       : _typeless(kj::mv(typeless)) {}
 
   inline  ::capnp::rpc::MessageTarget::Pipeline getTarget();
-  inline Context::Pipeline getContext();
+  inline typename Context::Pipeline getContext();
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -1446,7 +1486,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1547,7 +1587,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1641,7 +1681,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1729,7 +1769,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1823,7 +1863,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -1915,7 +1955,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2003,7 +2043,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2128,7 +2168,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2214,7 +2254,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2301,7 +2341,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -2384,7 +2424,7 @@ public:
 
 #if !CAPNP_LITE
   inline ::kj::StringTree toString() const {
-    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);
+    return ::capnp::_::structString(_reader, _capnpPrivate::brand());
   }
 #endif  // !CAPNP_LITE
 
@@ -3321,18 +3361,18 @@ inline ::capnp::Orphan< ::capnp::rpc::Payload> Call::Builder::disownParams() {
       _builder.getPointerField(1 * ::capnp::POINTERS));
 }
 
-inline Call::SendResultsTo::Reader Call::Reader::getSendResultsTo() const {
+inline typename Call::SendResultsTo::Reader Call::Reader::getSendResultsTo() const {
   return Call::SendResultsTo::Reader(_reader);
 }
-inline Call::SendResultsTo::Builder Call::Builder::getSendResultsTo() {
+inline typename Call::SendResultsTo::Builder Call::Builder::getSendResultsTo() {
   return Call::SendResultsTo::Builder(_builder);
 }
 #if !CAPNP_LITE
-inline Call::SendResultsTo::Pipeline Call::Pipeline::getSendResultsTo() {
+inline typename Call::SendResultsTo::Pipeline Call::Pipeline::getSendResultsTo() {
   return Call::SendResultsTo::Pipeline(_typeless.noop());
 }
 #endif  // !CAPNP_LITE
-inline Call::SendResultsTo::Builder Call::Builder::initSendResultsTo() {
+inline typename Call::SendResultsTo::Builder Call::Builder::initSendResultsTo() {
   _builder.setDataField< ::uint16_t>(3 * ::capnp::ELEMENTS, 0);
   _builder.getPointerField(2 * ::capnp::POINTERS).clear();
   return Call::SendResultsTo::Builder(_builder);
@@ -3915,18 +3955,18 @@ inline ::capnp::Orphan< ::capnp::rpc::MessageTarget> Disembargo::Builder::disown
       _builder.getPointerField(0 * ::capnp::POINTERS));
 }
 
-inline Disembargo::Context::Reader Disembargo::Reader::getContext() const {
+inline typename Disembargo::Context::Reader Disembargo::Reader::getContext() const {
   return Disembargo::Context::Reader(_reader);
 }
-inline Disembargo::Context::Builder Disembargo::Builder::getContext() {
+inline typename Disembargo::Context::Builder Disembargo::Builder::getContext() {
   return Disembargo::Context::Builder(_builder);
 }
 #if !CAPNP_LITE
-inline Disembargo::Context::Pipeline Disembargo::Pipeline::getContext() {
+inline typename Disembargo::Context::Pipeline Disembargo::Pipeline::getContext() {
   return Disembargo::Context::Pipeline(_typeless.noop());
 }
 #endif  // !CAPNP_LITE
-inline Disembargo::Context::Builder Disembargo::Builder::initContext() {
+inline typename Disembargo::Context::Builder Disembargo::Builder::initContext() {
   _builder.setDataField< ::uint32_t>(0 * ::capnp::ELEMENTS, 0);
   _builder.setDataField< ::uint16_t>(2 * ::capnp::ELEMENTS, 0);
   return Disembargo::Context::Builder(_builder);
