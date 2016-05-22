@@ -787,7 +787,7 @@ private:
     if (type.isBranded()) {
       name.addMemberType("_capnpPrivate");
       name.addMemberValue("brand");
-      return kj::strTree(name);
+      return kj::strTree('&', name, "()");
     } else {
       return nullptr;
     }
@@ -1745,7 +1745,7 @@ private:
         "\n"
         "#if !CAPNP_LITE\n"
         "  inline ::kj::StringTree toString() const {\n"
-        "    return ::capnp::_::structString(_reader, *_capnpPrivate::brand);\n"
+        "    return ::capnp::_::structString(_reader, _capnpPrivate::brand());\n"
         "  }\n"
         "#endif  // !CAPNP_LITE\n"
         "\n",
@@ -1848,8 +1848,10 @@ private:
         (!hasBrandDependencies ? "" :
             "    static const ::capnp::_::RawBrandedSchema::Dependency brandDependencies[];\n"),
         "    static const ::capnp::_::RawBrandedSchema specificBrand;\n"
-        "    static constexpr ::capnp::_::RawBrandedSchema const* brand = "
-        "::capnp::_::ChooseBrand<_capnpPrivate, ", templateContext.allArgs(), ">::brand;\n");
+        "    static ::capnp::_::RawBrandedSchema const& brand() {\n"
+        "      return ::capnp::_::ChooseBrand<_capnpPrivate, ",
+        templateContext.allArgs(), ">::brand();\n"
+        "    }\n");
   }
 
   kj::StringTree makeGenericDefinitions(
@@ -1910,8 +1912,7 @@ private:
         templates, "constexpr uint16_t ", fullName, "::_capnpPrivate::pointerCount;\n"
         "#if !CAPNP_LITE\n",
         templates, "constexpr ::capnp::Kind ", fullName, "::_capnpPrivate::kind;\n",
-        templates, "constexpr ::capnp::_::RawSchema const* ", fullName, "::_capnpPrivate::schema;\n",
-        templates, "constexpr ::capnp::_::RawBrandedSchema const* ", fullName, "::_capnpPrivate::brand;\n");
+        templates, "constexpr ::capnp::_::RawSchema const* ", fullName, "::_capnpPrivate::schema;\n");
 
     if (templateContext.isGeneric()) {
       auto brandInitializers = makeBrandInitializers(templateContext, schema);
@@ -1927,7 +1928,9 @@ private:
     } else {
       declareText = kj::strTree(kj::mv(declareText),
           "    #if !CAPNP_LITE\n"
-          "    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;\n"
+          "    static ::capnp::_::RawBrandedSchema const& brand() {\n"
+          "      return schema->defaultBrand;\n"
+          "    }\n"
           "    #endif  // !CAPNP_LITE\n");
     }
 
@@ -2185,8 +2188,7 @@ private:
         "// ", fullName, "\n",
         "#if !CAPNP_LITE\n",
         templates, "constexpr ::capnp::Kind ", fullName, "::_capnpPrivate::kind;\n",
-        templates, "constexpr ::capnp::_::RawSchema const* ", fullName, "::_capnpPrivate::schema;\n",
-        templates, "constexpr ::capnp::_::RawBrandedSchema const* ", fullName, "::_capnpPrivate::brand;\n");
+        templates, "constexpr ::capnp::_::RawSchema const* ", fullName, "::_capnpPrivate::schema;\n");
 
     if (templateContext.isGeneric()) {
       auto brandInitializers = makeBrandInitializers(templateContext, schema);
@@ -2199,7 +2201,9 @@ private:
           makeGenericDefinitions(templates, fullName, kj::str(hexId), kj::mv(brandInitializers)));
     } else {
       declareText = kj::strTree(kj::mv(declareText),
-        "    static constexpr ::capnp::_::RawBrandedSchema const* brand = &schema->defaultBrand;\n");
+        "    static ::capnp::_::RawBrandedSchema const& brand() {\n"
+        "      return schema->defaultBrand;\n"
+        "    }\n");
     }
 
     declareText = kj::strTree(kj::mv(declareText), "  };\n  #endif  // !CAPNP_LITE");
