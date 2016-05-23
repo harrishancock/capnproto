@@ -45,13 +45,17 @@ set(capnp_headers
   schema-parser.h
   pretty-print.h
   serialize.h
-  serialize-async.h
   serialize-packed.h
   serialize-text.h
   pointer-helpers.h
   generated-header-support.h
   raw-schema.h
 )
+if(UNIX)
+  list(APPEND capnp_headers
+    serialize-async.h
+  )
+endif()
 set(capnp_schemas
   c++.capnp
   schema.capnp
@@ -68,7 +72,6 @@ install(TARGETS capnp ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES ${capnp_headers} ${capnp_schemas} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/capnp")
 
 set(capnp-rpc_sources
-  serialize-async.c++
   capability.c++
   membrane.c++
   dynamic-capability.c++
@@ -79,6 +82,11 @@ set(capnp-rpc_sources
   persistent.capnp.c++
   ez-rpc.c++
 )
+if(UNIX)
+  list(APPEND capnp-rpc_sources
+    serialize-async.c++
+  )
+endif()
 set(capnp-rpc_headers
   rpc-prelude.h
   rpc.h
@@ -220,28 +228,38 @@ if(BUILD_TESTING)
   add_test(NAME capnp-tests-run COMMAND capnp-tests)
 
   if(NOT CAPNP_LITE)
-    add_executable(capnp-heavy-tests
+    set(capnp-heavy-tests_sources
       endian-reverse-test.c++
       capability-test.c++
-      membrane-test.c++
       schema-test.c++
       schema-loader-test.c++
       schema-parser-test.c++
       dynamic-test.c++
       stringify-test.c++
-      serialize-async-test.c++
       serialize-text-test.c++
       rpc-test.c++
-      rpc-twoparty-test.c++
-      ez-rpc-test.c++
       test-util.c++
       compat/json-test.c++
       ${test_capnp_cpp_files}
       ${test_capnp_h_files}
     )
+    if(UNIX)
+      list(APPEND capnp-heavy-tests_sources
+        membrane-test.c++
+        serialize-async-test.c++
+        rpc-twoparty-test.c++
+        ez-rpc-test.c++
+      )
+    endif()
+    add_executable(capnp-heavy-tests ${capnp-heavy-tests_sources})
     target_link_libraries(capnp-heavy-tests ${test_libraries})
+    if(MSVC)
+      set(noDeprecatedDeclarationsFlag "/wd4996")
+    else()
+      set(noDeprecatedDeclarationsFlag "-Wno-deprecated-declarations")
+    endif()
     set_target_properties(capnp-heavy-tests
-      PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations"
+      PROPERTIES COMPILE_FLAGS ${noDeprecatedDeclarationsFlag}
     )
 
     add_dependencies(check capnp-heavy-tests)

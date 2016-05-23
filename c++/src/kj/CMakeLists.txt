@@ -92,18 +92,26 @@ install(FILES ${kj-test-compat_headers} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}
 
 set(kj-async_sources
   async.c++
-  async-unix.c++
-  async-io.c++
   time.c++
 )
+if(UNIX)
+  list(APPEND kj-async_sources
+    async-unix.c++
+    async-io.c++
+  )
+endif()
 set(kj-async_headers
   async-prelude.h
   async.h
   async-inl.h
-  async-unix.h
-  async-io.h
   time.h
 )
+if(UNIX)
+  list(APPEND kj-async_headers
+    async-unix.h
+    async-io.h
+  )
+endif()
 if(NOT CAPNP_LITE)
   add_library(kj-async ${kj-async_sources})
   add_library(CapnProto::kj-async ALIAS kj-async)
@@ -138,10 +146,8 @@ if(BUILD_TESTING)
   add_test(NAME kj-tests-run COMMAND kj-tests)
 
   if(NOT CAPNP_LITE)
-    add_executable(kj-heavy-tests
+    set(kj-heavy-tests_sources
       async-test.c++
-      async-unix-test.c++
-      async-io-test.c++
       refcount-test.c++
       string-tree-test.c++
       arena-test.c++
@@ -153,6 +159,13 @@ if(BUILD_TESTING)
       parse/common-test.c++
       parse/char-test.c++
     )
+    if(UNIX)
+      list(APPEND kj-heavy-tests_sources
+        async-unix-test.c++
+        async-io-test.c++
+      )
+    endif()
+    add_executable(kj-heavy-tests ${kj-heavy-tests_sources})
     target_link_libraries(kj-heavy-tests kj-async kj-test kj)
     add_dependencies(check kj-heavy-tests)
     add_test(NAME kj-heavy-tests-run COMMAND kj-heavy-tests)
