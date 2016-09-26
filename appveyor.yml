@@ -1,0 +1,71 @@
+# Cap'n Proto AppVeyor configuration
+#
+# See https://www.appveyor.com/docs/appveyor-yml/ for configuration options.
+#
+# This script configures AppVeyor to:
+#   - Download and unzip MinGW-w64 4.8.5 for x86_64, the minimum gcc version Cap'n Proto advertises
+#     support for.
+#   - Use CMake to build Cap'n Proto with MinGW.
+#   - Use CMake to build Cap'n Proto with MSVC and the MinGW-built capnp tools.
+#   - Archive both builds in capnproto-c++-{mingw,msvc}.zip artifacts.
+
+version: "{build}"
+
+image: Visual Studio 2015
+# AppVeyor build worker image (VM template).
+
+shallow_clone: true
+# Fetch repository as zip archive.
+
+cache:
+  - x86_64-4.8.5-release-win32-seh-rt_v4-rev0.7z
+
+environment:
+  MINGW_DIR: mingw64
+  MINGW_URL: https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.8.5/threads-win32/seh/x86_64-4.8.5-release-win32-seh-rt_v4-rev0.7z/download
+  MINGW_ARCHIVE: x86_64-4.8.5-release-win32-seh-rt_v4-rev0.7z
+  BUILD_TYPE: release
+
+install:
+  - if not exist "%MINGW_ARCHIVE%" appveyor DownloadFile "%MINGW_URL%" -FileName "%MINGW_ARCHIVE%"
+  - 7z x -y "%MINGW_ARCHIVE%" > nul
+  - ps: Get-Command sh.exe -All | Remove-Item
+  # CMake refuses to generate MinGW Makefiles if sh.exe is in the PATH
+
+before_build:
+  - set PATH=%CD%\%MINGW_DIR%\bin;%PATH%
+  - cmake --version
+
+build_script:
+  - echo "Building Cap'n Proto with MinGW"
+  - cmake -Hc++ -Bbuild-mingw -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DCMAKE_INSTALL_PREFIX=%CD%\capnproto-c++-mingw
+  - cmake --build build-mingw -- -j%NUMBER_OF_PROCESSORS%
+  - set PATH=%CD%\build-mingw;%PATH%
+  - echo "Building Cap'n Proto with MSVC"
+  - cmake -Hc++ -Bbuild-msvc -G "Visual Studio 14 2015 Win64" -DEXTERNAL_CAPNP=ON -DCMAKE_INSTALL_PREFIX=%CD%\capnproto-c++-msvc
+  - cmake --build build-msvc --config %BUILD_TYPE%
+  # TODO(someday): pass `-- /maxcpucount` for a parallel build. Right now it occasionally expresses
+  # a filesystem-related race: capnp-capnpc++ complains that it can't create test.capnp.h.
+
+after_build:
+  - cmake --build build-mingw --target install
+  - 7z a capnproto-c++-mingw.zip capnproto-c++-mingw\*
+  - cmake --build build-msvc --target install
+  - 7z a capnproto-c++-msvc.zip capnproto-c++-msvc\*
+
+artifacts:
+  - path: capnproto-c++-mingw.zip
+    name: Capn Proto MinGW
+  - path: capnproto-c++-msvc.zip
+    name: Capn Proto MSVC
+
+# TODO(soon): Fix tests on Windows.
+#
+# Tests are not currently run, because until the tests start passing normally, it's more useful for
+# us to only be notified of build errors. When they start passing, uncomment the code below.
+#
+#test_script:
+#  - timeout /t 2
+#  # Sleep a little to prevent interleaving test output with build output.
+#  - cd build-msvc\src
+#  - ctest -V -C %BUILD_TYPE%
