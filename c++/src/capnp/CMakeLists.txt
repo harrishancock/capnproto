@@ -269,6 +269,7 @@ if(BUILD_TESTING)
           PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations"
         )
       endif()
+
       add_dependencies(check capnp-parse-tests)
       add_test(NAME capnp-parse-tests-run COMMAND capnp-parse-tests)
 
