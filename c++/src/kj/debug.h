@@ -481,7 +481,7 @@ inline Debug::Fault::Fault(const char* file, int line, Win32Error osErrorNumber,
 }
 
 inline bool Debug::isWin32Success(int boolean) {
-  return boolean;
+  return boolean != 0;
 }
 inline bool Debug::isWin32Success(void* handle) {
   // Assume null and INVALID_HANDLE_VALUE mean failure.
