@@ -286,7 +286,7 @@ void Once::runOnce(Initializer& init) {
 
 bool Once::isInitialized() noexcept {
   BOOL junk;
-  return InitOnceBeginInitialize(&coercedInitOnce, INIT_ONCE_CHECK_ONLY, &junk, nullptr);
+  return InitOnceBeginInitialize(&coercedInitOnce, INIT_ONCE_CHECK_ONLY, &junk, nullptr) != 0;
 }
 
 void Once::reset() {
