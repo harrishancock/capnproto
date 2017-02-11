@@ -100,7 +100,7 @@ PARSE_AS_INTEGER(long long);
 PARSE_AS_INTEGER(unsigned long long);
 #undef PARSE_AS_INTEGER
 template <> double StringPtr::parseAs<double>() const { return parseDouble(*this); }
-template <> float StringPtr::parseAs<float>() const { return parseDouble(*this); }
+template <> float StringPtr::parseAs<float>() const { return parseDouble(*this); }  // double into float
 
 String heapString(size_t size) {
   char* buffer = _::HeapArrayDisposer::allocate<char>(size + 1);

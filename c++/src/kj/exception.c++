@@ -538,7 +538,7 @@ void Exception::truncateCommonTrace() {
 
     // We expect that the deepest frame in the exception's stack trace should be somewhere in our
     // own trace, since our own trace has a deeper limit. Search for it.
-    for (uint i = refTrace.size(); i > 0; i--) {
+    for (uint i = refTrace.size(); i > 0; i--) {  // size_t into uint
       if (refTrace[i-1] == trace[traceCount-1]) {
         // See how many frames match.
         for (uint j = 0; j < i; j++) {

@@ -46,7 +46,7 @@ namespace kj {
 
 TopLevelProcessContext::TopLevelProcessContext(StringPtr programName)
     : programName(programName),
-      cleanShutdown(getenv("KJ_CLEAN_SHUTDOWN") != nullptr) {
+      cleanShutdown(getenv("KJ_CLEAN_SHUTDOWN") != nullptr) {  // get_env/_dupenv_s ?
   printStackTraceOnCrash();
 }
 
