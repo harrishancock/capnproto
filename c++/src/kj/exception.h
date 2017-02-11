@@ -128,7 +128,7 @@ private:
   String description;
   Maybe<Own<Context>> context;
   void* trace[32];
-  uint traceCount;
+  size_t traceCount;
 
   friend class ExceptionImpl;
 };
