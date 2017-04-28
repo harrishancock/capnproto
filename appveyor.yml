@@ -7,6 +7,7 @@
 #     support for.
 #   - Use CMake to ...
 #       build Cap'n Proto with MinGW.
+#       build Cap'n Proto samples with MinGW.
 #       build Cap'n Proto with VS2015.
 #       build Cap'n Proto samples with VS2015.
 
@@ -51,6 +52,13 @@ build_script:
       -DCMAKE_BUILD_TYPE=%BUILD_TYPE%
       -DCMAKE_INSTALL_PREFIX=%INSTALL_PREFIX_MINGW%
   - cmake --build build-mingw --target install -- -j%NUMBER_OF_PROCESSORS%
+
+  - echo "Building Cap'n Proto samples with MinGW"
+  - >-
+      cmake -Hc++/samples -Bbuild-mingw-samples -G "MinGW Makefiles"
+      -DCMAKE_BUILD_TYPE=%BUILD_TYPE%
+      -DCMAKE_PREFIX_PATH=%INSTALL_PREFIX_MINGW%
+  - cmake --build build-mingw-samples
 
   - echo "Building Cap'n Proto with Visual Studio 2015"
   - >-
