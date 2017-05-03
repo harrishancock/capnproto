@@ -190,6 +190,15 @@ class TaskSetImpl;
 
 class Event;
 
+#ifdef KJ_HAVE_COROUTINES
+
+template <typename T>
+class CoroutinePromise;
+template <typename T>
+class PromiseAwaiter;
+
+#endif  // KJ_HAVE_COROUTINES
+
 class PromiseBase {
 public:
   kj::String trace();
@@ -209,6 +218,11 @@ private:
   template <typename U>
   friend Promise<Array<U>> kj::joinPromises(Array<Promise<U>>&& promises);
   friend Promise<void> kj::joinPromises(Array<Promise<void>>&& promises);
+
+#ifdef KJ_HAVE_COROUTINES
+  template <typename>
+  friend class PromiseAwaiter;
+#endif
 };
 
 void detach(kj::Promise<void>&& promise);

@@ -291,6 +291,11 @@ public:
   // Returns a dump of debug info about this promise.  Not for production use.  Requires RTTI.
   // This method does NOT consume the promise as other methods do.
 
+#ifdef KJ_HAVE_COROUTINES
+  using promise_type = _::CoroutinePromise<T>;
+  // This could also go in a specialization of std::experimental::coroutine_traits<Promie<T>, ...>.
+#endif
+
 private:
   Promise(bool, Own<_::PromiseNode>&& node): PromiseBase(kj::mv(node)) {}
   // Second parameter prevent ambiguity with immediate-value constructor.
@@ -310,6 +315,11 @@ private:
   template <typename U>
   friend Promise<Array<U>> joinPromises(Array<Promise<U>>&& promises);
   friend Promise<void> joinPromises(Array<Promise<void>>&& promises);
+
+#ifdef KJ_HAVE_COROUTINES
+  template <typename>
+  friend class _::PromiseAwaiter;
+#endif
 };
 
 template <typename T>

@@ -1107,6 +1107,138 @@ PromiseFulfillerPair<T> newPromiseAndFulfiller() {
   return PromiseFulfillerPair<T> { kj::mv(promise), kj::mv(wrapper) };
 }
 
+// =======================================================================================
+
+#ifdef KJ_HAVE_COROUTINES
+
+namespace _ {
+
+class CoroutineAdapter: public Event {
+public:
+  std::experimental::coroutine_handle<> coroutine;
+
+  template <typename T>
+  CoroutineAdapter(PromiseFulfiller<T>& fulfiller,
+      std::experimental::coroutine_handle<CoroutinePromise<T>> c)
+      : coroutine(c)
+  {
+    c.promise().event = this;
+    c.promise().fulfiller = &fulfiller;
+  }
+
+  Maybe<Own<Event>> CoroutineAdapter::fire() override {
+    coroutine();
+    return nullptr;
+  }
+};
+
+template <typename T>
+class CoroutinePromise {
+public:
+  Promise<T> get_return_object() {
+    return newAdaptedPromise<T, CoroutineAdapter>(
+        std::experimental::coroutine_handle<CoroutinePromise>::from_promise(*this));
+  }
+
+  auto initial_suspend() { return std::experimental::suspend_never{}; }
+  auto final_suspend() { return std::experimental::suspend_never{}; }
+
+  template <typename U>
+  void return_value(U&& value) {
+    // TODO(soon): EnableIf on convertibility to T.
+    fulfiller->fulfill(decayCp(value));
+  }
+
+  void return_value(T&& value) {
+    // We need an explicit T overload in case we are passed a braced init list.
+    fulfiller->fulfill(mv(value));
+  }
+
+  void set_exception(std::exception_ptr e) {
+    fulfiller->rejectIfThrows([e = mv(e)] { std::rethrow_exception(mv(e)); });
+  }
+
+  Event* event;
+  PromiseFulfiller<T>* fulfiller;
+};
+
+template <>
+class CoroutinePromise<void> {
+public:
+  Promise<void> get_return_object() {
+    return newAdaptedPromise<void, CoroutineAdapter>(
+        std::experimental::coroutine_handle<CoroutinePromise>::from_promise(*this));
+  }
+
+  auto initial_suspend() { return std::experimental::suspend_never{}; }
+  auto final_suspend() { return std::experimental::suspend_never{}; }
+
+  void return_void() {
+    fulfiller->fulfill();
+  }
+
+  void set_exception(std::exception_ptr e) {
+    fulfiller->rejectIfThrows([e = mv(e)] { std::rethrow_exception(mv(e)); });
+  }
+
+  Event* event;
+  PromiseFulfiller<void>* fulfiller;
+};
+
+template <class T>
+class PromiseAwaiter {
+public:
+  Promise<T>& promise;
+
+  bool await_ready() const { return false; }
+
+  auto await_resume() {
+    ExceptionOr<T> result;
+    promise.node->get(result);
+    KJ_IF_MAYBE(value, mv(result.value)) {
+      return mv(*value);
+    }
+    KJ_IF_MAYBE(exception, mv(result.exception)) {
+      throwFatalException(mv(*exception));
+    }
+  }
+
+  template <class CoroutineHandle>
+  void await_suspend(CoroutineHandle c) {
+    promise.node->onReady(*c.promise().event);
+  }
+};
+
+template <>
+class PromiseAwaiter<void> {
+public:
+  Promise<void>& promise;
+
+  bool await_ready() const { return false; }
+
+  void await_resume() {
+    ExceptionOr<Void> result;
+    promise.node->get(result);
+    KJ_IF_MAYBE(exception, mv(result.exception)) {
+      throwFatalException(mv(*exception));
+    }
+  }
+
+  template <class CoroutineHandle>
+  void await_suspend(CoroutineHandle c) {
+    promise.node->onReady(*c.promise().event);
+  }
+};
+
+}  // namespace _ (private)
+
+template <class T>
+auto operator co_await(Promise<T>& promise) {
+  return _::PromiseAwaiter<T>{promise};
+}
+
+#endif
+
 }  // namespace kj
 
 #endif  // KJ_ASYNC_INL_H_
