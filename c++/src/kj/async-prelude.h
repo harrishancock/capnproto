@@ -32,21 +32,6 @@
 #include "exception.h"
 #include "tuple.h"
 
-#ifdef __cpp_coroutines
-// Clang uses the official symbol and header file.
-
-#define KJ_HAVE_COROUTINES 1
-//#include <experimental/coroutine>
-#include "./compat/coroutines.h"
-
-#elif defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
-// MSVC as of VS2017 still uses their old symbol and header.
-
-#define KJ_HAVE_COROUTINES 1
-#include <experimental/resumable>
-
-#endif
-
 namespace kj {
 
 class EventLoop;
@@ -191,15 +176,6 @@ class TaskSetImpl;
 
 class Event;
 
-#ifdef KJ_HAVE_COROUTINES
-
-template <typename T>
-class CoroutinePromise;
-template <typename T>
-class PromiseAwaiter;
-
-#endif  // KJ_HAVE_COROUTINES
-
 class PromiseBase {
 public:
   kj::String trace();
@@ -220,9 +196,11 @@ private:
   friend Promise<Array<U>> kj::joinPromises(Array<Promise<U>>&& promises);
   friend Promise<void> kj::joinPromises(Array<Promise<void>>&& promises);
 
-#ifdef KJ_HAVE_COROUTINES
-  template <typename>
-  friend class PromiseAwaiter;
+#if defined(__cpp_coroutines) || defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
+  template <typename T>
+  friend T operator co_await(Promise<T>&);
+  template <typename T>
+  friend T operator co_await(Promise<T>&&);
 #endif
 };
 

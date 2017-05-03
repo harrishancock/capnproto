@@ -291,9 +291,16 @@ public:
   // Returns a dump of debug info about this promise.  Not for production use.  Requires RTTI.
   // This method does NOT consume the promise as other methods do.
 
-#ifdef KJ_HAVE_COROUTINES
-  using promise_type = _::CoroutinePromise<T>;
-  // This could also go in a specialization of std::experimental::coroutine_traits<Promie<T>, ...>.
+#if defined(__cpp_coroutines) || defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
+  friend T operator co_await(Promise<T>&);
+  friend T operator co_await(Promise<T>&&);
+  // Asynchronously wait for a promise inside of a coroutine returning kj::Promise. This operator is
+  // not (yet) supported inside any other coroutine type.
+  //
+  // Like .then() and friends, operator co_await consumes the promise passed to it, regardless of
+  // the promise's lvalue-ness. Instead of returning a new promise to you, it stores it inside an
+  // Awaitable, as defined by the Coroutines TS, which lives in the enclosing coroutine's context
+  // structure.
 #endif
 
 private:
@@ -315,11 +322,6 @@ private:
   template <typename U>
   friend Promise<Array<U>> joinPromises(Array<Promise<U>>&& promises);
   friend Promise<void> joinPromises(Array<Promise<void>>&& promises);
-
-#ifdef KJ_HAVE_COROUTINES
-  template <typename>
-  friend class _::PromiseAwaiter;
-#endif
 };
 
 template <typename T>
