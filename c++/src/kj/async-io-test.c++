@@ -80,8 +80,7 @@ TEST(AsyncIo, SimpleNetworkCoroutine) {
   auto port = newPromiseAndFulfiller<uint>();
 
   [&]() -> kj::Promise<void> {
-    auto portnum = co_await port.promise;
-    auto address = co_await network.parseAddress("localhost", portnum);
+    auto address = co_await network.parseAddress("localhost", co_await port.promise);
     auto client = co_await address->connect();
     co_await client->write("foo", 3);
   }().detach([](kj::Exception&& exception) {
