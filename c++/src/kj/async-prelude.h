@@ -36,7 +36,8 @@
 // Clang uses the official symbol and header file.
 
 #define KJ_HAVE_COROUTINES 1
-#include <experimental/coroutine>
+//#include <experimental/coroutine>
+#include "./compat/coroutines.h"
 
 #elif defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
 // MSVC as of VS2017 still uses their old symbol and header.
