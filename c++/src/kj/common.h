@@ -507,6 +507,8 @@ template<typename T> constexpr T cp(T& t) noexcept { return t; }
 template<typename T> constexpr T cp(const T& t) noexcept { return t; }
 // Useful to force a copy, particularly to pass into a function that expects T&&.
 
+template<typename T> constexpr Decay<T> decayCp(T&& v) { return fwd<T>(v); }
+
 template <typename T, typename U, bool takeT, bool uOK = true> struct ChooseType_;
 template <typename T, typename U> struct ChooseType_<T, U, true, true> { typedef T Type; };
 template <typename T, typename U> struct ChooseType_<T, U, true, false> { typedef T Type; };
