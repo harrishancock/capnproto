@@ -1366,5 +1366,35 @@ KJ_TEST("HttpClient to capnproto.org") {
   }
 }
 
+#ifdef KJ_HAVE_COROUTINES
+
+KJ_TEST("HttpClient to capnproto.org with a coroutine") {
+  auto io = kj::setupAsyncIo();
+
+  [&]() -> kj::Promise<void> {
+    auto addr = co_await io.provider->getNetwork().parseAddress("capnproto.org", 80);
+    auto connection = co_await addr->connect();
+    // Successfully connected to capnproto.org. Try doing GET /. We expect to get a redirect to
+    // HTTPS, because what kind of horrible web site would serve in plaintext, really?
+
+    HttpHeaderTable table;
+    auto client = newHttpClient(table, *connection);
+
+    HttpHeaders headers(table);
+    headers.set(HttpHeaderId::HOST, "capnproto.org");
+
+    auto response = co_await client->request(HttpMethod::GET, "/", headers).response;
+    KJ_EXPECT(response.statusCode / 100 == 3);
+    auto location = KJ_ASSERT_NONNULL(response.headers->get(HttpHeaderId::LOCATION));
+    KJ_EXPECT(location == "https://capnproto.org/");
+
+    auto body = co_await response.body->readAllText();
+  }().catch_([](kj::Exception&& e) {
+    KJ_LOG(WARNING, "skipping test because couldn't connect to capnproto.org");
+  }).wait(io.waitScope);
+}
+
+#endif
+
 }  // namespace
 }  // namespace kj
