@@ -71,6 +71,39 @@ TEST(AsyncIo, SimpleNetwork) {
   EXPECT_EQ("foo", result);
 }
 
+#ifdef KJ_HAVE_COROUTINES
+
+TEST(AsyncIo, SimpleNetworkCoroutine) {
+  auto ioContext = setupAsyncIo();
+  auto& network = ioContext.provider->getNetwork();
+
+  auto port = newPromiseAndFulfiller<uint>();
+
+  [&]() -> kj::Promise<void> {
+    auto portnum = co_await port.promise;
+    auto address = co_await network.parseAddress("localhost", portnum);
+    auto client = co_await address->connect();
+    co_await client->write("foo", 3);
+  }().detach([](kj::Exception&& exception) {
+    KJ_FAIL_EXPECT(exception);
+  });
+
+  kj::String result = [&]() -> kj::Promise<kj::String> {
+    auto address = co_await network.parseAddress("*");
+    auto listener = address->listen();
+    port.fulfiller->fulfill(listener->getPort());
+    auto server = co_await listener->accept();
+    char receiveBuffer[4];
+    auto n = co_await server->tryRead(receiveBuffer, 3, 4);
+    EXPECT_EQ(3u, n);
+    co_return heapString(receiveBuffer, n);
+  }().wait(ioContext.waitScope);
+
+  EXPECT_EQ("foo", result);
+}
+
+#endif  // KJ_HAVE_COROUTINES
+
 String tryParse(WaitScope& waitScope, Network& network, StringPtr text, uint portHint = 0) {
   return network.parseAddress(text, portHint).wait(waitScope)->toString();
 }

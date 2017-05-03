@@ -748,5 +748,21 @@ TEST(Async, SetRunnable) {
   }
 }
 
+#ifdef KJ_HAVE_COROUTINES
+
+TEST(Async, Coroutine) {
+  EventLoop loop;
+  WaitScope waitScope(loop);
+
+  auto i = []() -> kj::Promise<int> {
+    co_await kj::Promise<void>(kj::READY_NOW);
+    co_return 123;
+  }().wait(waitScope);
+
+  EXPECT_EQ(i, 123);
+}
+
+#endif  // KJ_HAVE_COROUTINES
+
 }  // namespace
 }  // namespace kj
