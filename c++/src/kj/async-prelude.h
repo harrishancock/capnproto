@@ -32,6 +32,20 @@
 #include "exception.h"
 #include "tuple.h"
 
+#ifdef __cpp_coroutines
+// Clang uses the official symbol and header file.
+
+#define KJ_HAVE_COROUTINES 1
+#include <experimental/coroutine>
+
+#elif defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
+// MSVC as of VS2017 still uses their old symbol and header.
+
+#define KJ_HAVE_COROUTINES 1
+#include <experimental/resumable>
+
+#endif
+
 namespace kj {
 
 class EventLoop;
