@@ -292,8 +292,10 @@ public:
   // This method does NOT consume the promise as other methods do.
 
 #if defined(__cpp_coroutines) || defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
-  friend T operator co_await(Promise<T>&);
-  friend T operator co_await(Promise<T>&&);
+  template <typename U>
+  friend auto operator co_await(Promise<U>&);
+  template <typename U>
+  friend auto operator co_await(Promise<U>&&);
   // Asynchronously wait for a promise inside of a coroutine returning kj::Promise. This operator is
   // not (yet) supported inside any other coroutine type.
   //

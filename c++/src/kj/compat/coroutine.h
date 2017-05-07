@@ -91,14 +91,14 @@ public:
     fulfiller->fulfill(mv(value));
   }
 
-  void set_exception(std::exception_ptr e) {
-    // MSVC doesn't yet implement the unhandled_exception() change in the Coroutines TS.
-    fulfiller->rejectIfThrows([e = mv(e)] { std::rethrow_exception(mv(e)); });
+  void unhandled_exception() {
+    fulfiller->rejectIfThrows([] { std::rethrow_exception(std::current_exception()); });
   }
 
-  void unhandled_exception() {
-    // Coroutines TS changed set_exception to unhandled_exception, and made it required.
-    set_exception(std::current_exception());
+  void set_exception(std::exception_ptr e) {
+    // TODO(msvc): MSVC as of VS2017 implements an older wording of the Coroutines TS, and uses
+    //   this set_exception() instead of unhandled_exception(). Remove this when we can.
+    fulfiller->rejectIfThrows([e = mv(e)] { std::rethrow_exception(mv(e)); });
   }
 
   Event* event;
@@ -120,14 +120,14 @@ public:
     fulfiller->fulfill();
   }
 
-  void set_exception(std::exception_ptr e) {
-    // MSVC doesn't yet implement the unhandled_exception() change in the Coroutines TS.
-    fulfiller->rejectIfThrows([e = mv(e)] { std::rethrow_exception(mv(e)); });
+  void unhandled_exception() {
+    fulfiller->rejectIfThrows([] { std::rethrow_exception(std::current_exception()); });
   }
 
-  void unhandled_exception() {
-    // Coroutines TS changed set_exception to unhandled_exception, and made it required.
-    set_exception(std::current_exception());
+  void set_exception(std::exception_ptr e) {
+    // TODO(msvc): MSVC as of VS2017 implements an older wording of the Coroutines TS, and uses
+    //   this set_exception() instead of unhandled_exception(). Remove this when we can.
+    fulfiller->rejectIfThrows([e = mv(e)] { std::rethrow_exception(mv(e)); });
   }
 
   Event* event;
@@ -151,7 +151,7 @@ public:
 
 template <typename T>
 inline T PromiseAwaiter<T>::await_resume() {
-  ExceptionOr<FixVoid<T>> result;
+  ExceptionOr<T> result;
   node->get(result);
   KJ_IF_MAYBE(exception, mv(result.exception)) {
     throwFatalException(mv(*exception));
@@ -159,17 +159,27 @@ inline T PromiseAwaiter<T>::await_resume() {
   KJ_IF_MAYBE(value, mv(result.value)) {
     return mv(*value);
   }
+  KJ_UNREACHABLE;
+}
+
+template <>
+inline void PromiseAwaiter<void>::await_resume() {
+  ExceptionOr<Void> result;
+  node->get(result);
+  KJ_IF_MAYBE(exception, mv(result.exception)) {
+    throwFatalException(mv(*exception));
+  }
 }
 
 }  // namespace _ (private)
 
 template <class T>
-T operator co_await(Promise<T>& promise) {
+auto operator co_await(Promise<T>& promise) {
   return _::PromiseAwaiter<T>{mv(promise.node)};
 }
 
 template <class T>
-T operator co_await(Promise<T>&& promise) {
+auto operator co_await(Promise<T>&& promise) {
   return _::PromiseAwaiter<T>{mv(promise.node)};
 }
 
