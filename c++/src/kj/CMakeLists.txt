@@ -141,6 +141,25 @@ if(NOT CAPNP_LITE)
   install(FILES ${kj-http_headers} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/kj/compat")
 endif()
 
+# kj-coroutine =================================================================
+
+set(kj-coroutine_headers
+  compat/coroutine.h
+)
+if(NOT CAPNP_LITE)
+  add_library(kj-coroutine INTERFACE)
+  add_library(CapnProto::kj-coroutine ALIAS kj-coroutine)
+  target_compile_features(kj INTERFACE cxx_generic_lambdas)  # Need C++14
+  if(MSVC)
+    target_compile_options(kj-coroutine INTERFACE /await)
+  else()
+    target_compile_options(kj-coroutine INTERFACE -fcoroutines-ts)
+  endif()
+  target_link_libraries(kj-coroutine INTERFACE kj-async)
+  install(TARGETS kj-coroutine ${INSTALL_TARGETS_DEFAULT_ARGS})
+  install(FILES ${kj-coroutine_headers} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/kj/compat")
+endif()
+
 # Tests ========================================================================
 
 if(BUILD_TESTING)
@@ -179,8 +198,9 @@ if(BUILD_TESTING)
       parse/common-test.c++
       parse/char-test.c++
       compat/http-test.c++
+      compat/coroutine-test.c++
     )
-    target_link_libraries(kj-heavy-tests kj-http kj-async kj-test kj)
+    target_link_libraries(kj-heavy-tests kj-coroutine kj-http kj-async kj-test kj)
     add_dependencies(check kj-heavy-tests)
     add_test(NAME kj-heavy-tests-run COMMAND kj-heavy-tests)
   endif()  # NOT CAPNP_LITE

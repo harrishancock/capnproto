@@ -45,7 +45,7 @@ if(MSVC)
   # TODO(cleanup): Enable higher warning level in MSVC, but make sure to test
   #   build with that warning level and clean out false positives.
 
-  add_compile_options(/wo4503 /await)
+  add_compile_options(/wo4503)
   # Only warn once on truncated decorated names. The maximum symbol length MSVC
   # supports is 4k characters, which the parser framework regularly blows. The
   # compiler likes to print out the entire type that went over the limit along
