@@ -39,7 +39,7 @@ KJ_TEST("Simple coroutine test") {
     co_return 123;
   }().wait(waitScope);
 
-  EXPECT_EQ(i, 123);
+  KJ_EXPECT(i == 123);
 }
 
 KJ_TEST("Simple network test with a coroutine") {
@@ -63,11 +63,11 @@ KJ_TEST("Simple network test with a coroutine") {
     auto server = co_await listener->accept();
     char receiveBuffer[4];
     auto n = co_await server->tryRead(receiveBuffer, 3, 4);
-    EXPECT_EQ(3u, n);
+    KJ_EXPECT(3u == n);
     co_return heapString(receiveBuffer, n);
   }().wait(ioContext.waitScope);
 
-  EXPECT_EQ("foo", result);
+  KJ_EXPECT("foo" == result);
 }
 
 KJ_TEST("HttpClient to capnproto.org with a coroutine") {
