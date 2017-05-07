@@ -748,7 +748,7 @@ TEST(Async, SetRunnable) {
   }
 }
 
-#ifdef KJ_HAVE_COROUTINES
+#ifdef KJ_HAVE_COROUTINE
 
 TEST(Async, Coroutine) {
   EventLoop loop;
@@ -762,7 +762,7 @@ TEST(Async, Coroutine) {
   EXPECT_EQ(i, 123);
 }
 
-#endif  // KJ_HAVE_COROUTINES
+#endif  // KJ_HAVE_COROUTINE
 
 }  // namespace
 }  // namespace kj

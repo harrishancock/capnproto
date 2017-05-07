@@ -31,16 +31,18 @@
 #ifdef __cpp_coroutines
 // Clang uses the official symbol and header file.
 
-#define KJ_HAVE_COROUTINES 1
+#define KJ_HAVE_COROUTINE 1
 #include <experimental/coroutine>
 
 #elif defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
 // MSVC as of VS2017 still uses their old symbol and header.
 
-#define KJ_HAVE_COROUTINES 1
+#define KJ_HAVE_COROUTINE 1
 #include <experimental/resumable>
 
 #endif
+
+#ifdef KJ_HAVE_COROUTINE
 
 namespace kj {
 namespace _ {
@@ -183,5 +185,7 @@ struct coroutine_traits<kj::Promise<T>, Args...> {
 
 }  // namespace experimental
 }  // namespace std
+
+#endif  // KJ_HAVE_COROUTINE
 
 #endif  // KJ_COMPAT_COROUTINE_H_

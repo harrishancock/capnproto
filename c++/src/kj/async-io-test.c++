@@ -71,7 +71,7 @@ TEST(AsyncIo, SimpleNetwork) {
   EXPECT_EQ("foo", result);
 }
 
-#ifdef KJ_HAVE_COROUTINES
+#ifdef KJ_HAVE_COROUTINE
 
 TEST(AsyncIo, SimpleNetworkCoroutine) {
   auto ioContext = setupAsyncIo();
@@ -101,7 +101,7 @@ TEST(AsyncIo, SimpleNetworkCoroutine) {
   EXPECT_EQ("foo", result);
 }
 
-#endif  // KJ_HAVE_COROUTINES
+#endif  // KJ_HAVE_COROUTINE
 
 String tryParse(WaitScope& waitScope, Network& network, StringPtr text, uint portHint = 0) {
   return network.parseAddress(text, portHint).wait(waitScope)->toString();
