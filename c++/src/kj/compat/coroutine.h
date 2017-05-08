@@ -48,10 +48,9 @@ namespace kj {
 namespace _ {
 
 template <typename T>
-class CoroutinePromise;
+struct CoroutinePromise;
 
-class CoroutineAdapter: public Event {
-public:
+struct CoroutineAdapter: public Event {
   std::experimental::coroutine_handle<> coroutine;
 
   template <typename T>
@@ -59,37 +58,28 @@ public:
       std::experimental::coroutine_handle<CoroutinePromise<T>> c)
       : coroutine(c)
   {
-    c.promise().event = this;
+    c.promise().adapter = this;
     c.promise().fulfiller = &fulfiller;
   }
 
-  Maybe<Own<Event>> CoroutineAdapter::fire() override {
-    coroutine();
+  ~CoroutineAdapter() noexcept(false) { if (coroutine) { coroutine.destroy(); } }
+
+  Maybe<Own<Event>> fire() override {
+    coroutine.resume();
     return nullptr;
   }
 };
 
 template <typename T>
-class CoroutinePromise {
-public:
+struct CoroutinePromiseBase {
   Promise<T> get_return_object() {
     return newAdaptedPromise<T, CoroutineAdapter>(
-        std::experimental::coroutine_handle<CoroutinePromise>::from_promise(*this));
+        std::experimental::coroutine_handle<CoroutinePromise<T>>::from_promise(
+            static_cast<CoroutinePromise<T>&>(*this)));
   }
 
   auto initial_suspend() { return std::experimental::suspend_never{}; }
   auto final_suspend() { return std::experimental::suspend_never{}; }
-
-  template <typename U>
-  void return_value(U&& value) {
-    // TODO(soon): EnableIf on convertibility to T.
-    fulfiller->fulfill(decayCp(value));
-  }
-
-  void return_value(T&& value) {
-    // We need an explicit T overload in case we are passed a braced init list.
-    fulfiller->fulfill(mv(value));
-  }
 
   void unhandled_exception() {
     fulfiller->rejectIfThrows([] { std::rethrow_exception(std::current_exception()); });
@@ -101,52 +91,36 @@ public:
     fulfiller->rejectIfThrows([e = mv(e)] { std::rethrow_exception(mv(e)); });
   }
 
-  Event* event;
+  CoroutineAdapter* adapter;
   PromiseFulfiller<T>* fulfiller;
+
+  ~CoroutinePromiseBase() { adapter->coroutine = nullptr; }
+};
+
+template <typename T>
+struct CoroutinePromise: CoroutinePromiseBase<T> {
+  void return_value(T&& value) { fulfiller->fulfill(mv(value)); }
+  template <typename U>
+  void return_value(U&& value) { fulfiller->fulfill(decayCp(value)); }
 };
 
 template <>
-class CoroutinePromise<void> {
-public:
-  Promise<void> get_return_object() {
-    return newAdaptedPromise<void, CoroutineAdapter>(
-        std::experimental::coroutine_handle<CoroutinePromise>::from_promise(*this));
-  }
-
-  auto initial_suspend() { return std::experimental::suspend_never{}; }
-  auto final_suspend() { return std::experimental::suspend_never{}; }
-
-  void return_void() {
-    fulfiller->fulfill();
-  }
-
-  void unhandled_exception() {
-    fulfiller->rejectIfThrows([] { std::rethrow_exception(std::current_exception()); });
-  }
-
-  void set_exception(std::exception_ptr e) {
-    // TODO(msvc): MSVC as of VS2017 implements an older wording of the Coroutines TS, and uses
-    //   this set_exception() instead of unhandled_exception(). Remove this when we can.
-    fulfiller->rejectIfThrows([e = mv(e)] { std::rethrow_exception(mv(e)); });
-  }
-
-  Event* event;
-  PromiseFulfiller<void>* fulfiller;
+struct CoroutinePromise<void>: CoroutinePromiseBase<void> {
+  void return_void() { fulfiller->fulfill(); }
 };
 
 template <class T>
-class PromiseAwaiter {
-public:
-  Own<PromiseNode> node;
-
+struct PromiseAwaiter {
   bool await_ready() const { return false; }
 
   T await_resume();
 
   template <class CoroutineHandle>
   void await_suspend(CoroutineHandle c) {
-    node->onReady(*c.promise().event);
+    node->onReady(*c.promise().adapter);
   }
+
+  Own<PromiseNode> node;
 };
 
 template <typename T>
