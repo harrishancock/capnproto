@@ -48,14 +48,14 @@ namespace kj {
 namespace _ {
 
 template <typename T>
-struct CoroutinePromise;
+struct CoroutineFulfiller;
 
 struct CoroutineAdapter: public Event {
   std::experimental::coroutine_handle<> coroutine;
 
   template <typename T>
   CoroutineAdapter(PromiseFulfiller<T>& fulfiller,
-      std::experimental::coroutine_handle<CoroutinePromise<T>> c)
+      std::experimental::coroutine_handle<CoroutineFulfiller<T>> c)
       : coroutine(c)
   {
     c.promise().adapter = this;
@@ -71,11 +71,11 @@ struct CoroutineAdapter: public Event {
 };
 
 template <typename T>
-struct CoroutinePromiseBase {
+struct CoroutineFulfillerBase {
   Promise<T> get_return_object() {
     return newAdaptedPromise<T, CoroutineAdapter>(
-        std::experimental::coroutine_handle<CoroutinePromise<T>>::from_promise(
-            static_cast<CoroutinePromise<T>&>(*this)));
+        std::experimental::coroutine_handle<CoroutineFulfiller<T>>::from_promise(
+            static_cast<CoroutineFulfiller<T>&>(*this)));
   }
 
   auto initial_suspend() { return std::experimental::suspend_never{}; }
@@ -94,35 +94,36 @@ struct CoroutinePromiseBase {
   CoroutineAdapter* adapter;
   PromiseFulfiller<T>* fulfiller;
 
-  ~CoroutinePromiseBase() { adapter->coroutine = nullptr; }
+  ~CoroutineFulfillerBase() { adapter->coroutine = nullptr; }
 };
 
 template <typename T>
-struct CoroutinePromise: CoroutinePromiseBase<T> {
+struct CoroutineFulfiller: CoroutineFulfillerBase<T> {
   void return_value(T&& value) { this->fulfiller->fulfill(mv(value)); }
   template <typename U>
   void return_value(U&& value) { this->fulfiller->fulfill(decayCp(value)); }
 };
 
 template <>
-struct CoroutinePromise<void>: CoroutinePromiseBase<void> {
+struct CoroutineFulfiller<void>: CoroutineFulfillerBase<void> {
   void return_void() { fulfiller->fulfill(); }
 };
 
 template <typename>
-struct ExposeNode;
+struct FriendAbuse;
 // An incomplete tag class template. No one will ever instantiate one of these, so we can specialize
-// kj::Promise<ExposeNode<T>> and gain friend access to the promise's base node.
+// kj::Promise<FriendAbuse<T>> and gain friend access to the promise's base node.
 
 }  // namespace _ (private)
 
 template <typename T>
-class Promise<_::ExposeNode<T>>: private Promise<T> {
+class Promise<_::FriendAbuse<T>>: private Promise<T> {
   // Friend our way to the base node. If you need access to the underlying kj::_::PromiseNode
   // interface of a kj::Promise, move it into one of these.
 
 public:
   Promise(Promise<T>&& promise): Promise<T>(mv(promise)) {}
+
   _::PromiseNode* operator->() { return this->node.get(); }
 };
 
@@ -130,7 +131,7 @@ namespace _ {
 
 template <typename T>
 class PromiseAwaiter {
-  kj::Promise<_::ExposeNode<T>> node;
+  kj::Promise<_::FriendAbuse<T>> node;
 
 public:
   PromiseAwaiter(Promise<T>&& promise): node(mv(promise)) {}
@@ -193,7 +194,7 @@ namespace experimental {
 
 template <class T, class... Args>
 struct coroutine_traits<kj::Promise<T>, Args...> {
-  using promise_type = kj::_::CoroutinePromise<T>;
+  using promise_type = kj::_::CoroutineFulfiller<T>;
 };
 
 }  // namespace experimental
