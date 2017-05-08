@@ -110,14 +110,30 @@ struct CoroutinePromise<void>: CoroutinePromiseBase<void> {
 };
 
 template <typename>
-struct Await;
+struct ExposeNode;
+// An incomplete tag class template. No one will ever instantiate one of these, so we can specialize
+// kj::Promise<ExposeNode<T>> and gain friend access to the promise's base node.
 
 }  // namespace _ (private)
 
 template <typename T>
-class Promise<_::Await<T>>: private Promise<T> {
+class Promise<_::ExposeNode<T>>: private Promise<T> {
+  // Friend our way to the base node. If you need access to the underlying kj::_::PromiseNode
+  // interface of a kj::Promise, move it into one of these.
+
 public:
   Promise(Promise<T>&& promise): Promise<T>(mv(promise)) {}
+  _::PromiseNode* operator->() { return this->node.get(); }
+};
+
+namespace _ {
+
+template <typename T>
+class PromiseAwaiter {
+  kj::Promise<_::ExposeNode<T>> node;
+
+public:
+  PromiseAwaiter(Promise<T>&& promise): node(mv(promise)) {}
 
   bool await_ready() const { return false; }
 
@@ -125,14 +141,14 @@ public:
 
   template <class CoroutineHandle>
   void await_suspend(CoroutineHandle c) {
-    this->node->onReady(*c.promise().adapter);
+    node->onReady(*c.promise().adapter);
   }
 };
 
 template <typename T>
-inline T Promise<_::Await<T>>::await_resume() {
+inline T PromiseAwaiter<T>::await_resume() {
   _::ExceptionOr<T> result;
-  this->node->get(result);
+  node->get(result);
   KJ_IF_MAYBE(exception, mv(result.exception)) {
     throwFatalException(mv(*exception));
   }
@@ -143,22 +159,24 @@ inline T Promise<_::Await<T>>::await_resume() {
 }
 
 template <>
-inline void Promise<_::Await<void>>::await_resume() {
+inline void PromiseAwaiter<void>::await_resume() {
   _::ExceptionOr<_::Void> result;
-  this->node->get(result);
+  node->get(result);
   KJ_IF_MAYBE(exception, mv(result.exception)) {
     throwFatalException(mv(*exception));
   }
 }
 
+}  // namespace _ (private)
+
 template <class T>
 auto operator co_await(Promise<T>& promise) {
-  return Promise<_::Await<T>>{mv(promise)};
+  return _::PromiseAwaiter<T>{mv(promise)};
 }
 
 template <class T>
 auto operator co_await(Promise<T>&& promise) {
-  return Promise<_::Await<T>>{mv(promise)};
+  return _::PromiseAwaiter<T>{mv(promise)};
 }
 // Asynchronously wait for a promise inside of a coroutine returning kj::Promise. This operator is
 // not (yet) supported inside any other coroutine type.
