@@ -43,13 +43,6 @@ template <typename T>
 Promise<Array<T>> joinPromises(Array<Promise<T>>&& promises);
 Promise<void> joinPromises(Array<Promise<void>>&& promises);
 
-#if defined(__cpp_coroutines) || defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
-template <class T>
-auto operator co_await(Promise<T>& promise);
-template <class T>
-auto operator co_await(Promise<T>&& promise);
-#endif
-
 namespace _ {  // private
 
 template <typename T> struct JoinPromises_ { typedef T Type; };
@@ -202,13 +195,6 @@ private:
   template <typename U>
   friend Promise<Array<U>> kj::joinPromises(Array<Promise<U>>&& promises);
   friend Promise<void> kj::joinPromises(Array<Promise<void>>&& promises);
-
-#if defined(__cpp_coroutines) || defined(_RESUMABLE_FUNCTIONS_SUPPORTED)
-  template <typename T>
-  friend auto ::kj::operator co_await(Promise<T>&);
-  template <typename T>
-  friend auto ::kj::operator co_await(Promise<T>&&);
-#endif
 };
 
 void detach(kj::Promise<void>&& promise);

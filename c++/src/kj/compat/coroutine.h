@@ -99,9 +99,9 @@ struct CoroutinePromiseBase {
 
 template <typename T>
 struct CoroutinePromise: CoroutinePromiseBase<T> {
-  void return_value(T&& value) { fulfiller->fulfill(mv(value)); }
+  void return_value(T&& value) { this->fulfiller->fulfill(mv(value)); }
   template <typename U>
-  void return_value(U&& value) { fulfiller->fulfill(decayCp(value)); }
+  void return_value(U&& value) { this->fulfiller->fulfill(decayCp(value)); }
 };
 
 template <>
@@ -109,24 +109,30 @@ struct CoroutinePromise<void>: CoroutinePromiseBase<void> {
   void return_void() { fulfiller->fulfill(); }
 };
 
-template <class T>
-struct PromiseAwaiter {
+template <typename>
+struct Await;
+
+}  // namespace _ (private)
+
+template <typename T>
+class Promise<_::Await<T>>: private Promise<T> {
+public:
+  Promise(Promise<T>&& promise): Promise<T>(mv(promise)) {}
+
   bool await_ready() const { return false; }
 
   T await_resume();
 
   template <class CoroutineHandle>
   void await_suspend(CoroutineHandle c) {
-    node->onReady(*c.promise().adapter);
+    this->node->onReady(*c.promise().adapter);
   }
-
-  Own<PromiseNode> node;
 };
 
 template <typename T>
-inline T PromiseAwaiter<T>::await_resume() {
-  ExceptionOr<T> result;
-  node->get(result);
+inline T Promise<_::Await<T>>::await_resume() {
+  _::ExceptionOr<T> result;
+  this->node->get(result);
   KJ_IF_MAYBE(exception, mv(result.exception)) {
     throwFatalException(mv(*exception));
   }
@@ -137,25 +143,30 @@ inline T PromiseAwaiter<T>::await_resume() {
 }
 
 template <>
-inline void PromiseAwaiter<void>::await_resume() {
-  ExceptionOr<Void> result;
-  node->get(result);
+inline void Promise<_::Await<void>>::await_resume() {
+  _::ExceptionOr<_::Void> result;
+  this->node->get(result);
   KJ_IF_MAYBE(exception, mv(result.exception)) {
     throwFatalException(mv(*exception));
   }
 }
 
-}  // namespace _ (private)
-
 template <class T>
 auto operator co_await(Promise<T>& promise) {
-  return _::PromiseAwaiter<T>{mv(promise.node)};
+  return Promise<_::Await<T>>{mv(promise)};
 }
 
 template <class T>
 auto operator co_await(Promise<T>&& promise) {
-  return _::PromiseAwaiter<T>{mv(promise.node)};
+  return Promise<_::Await<T>>{mv(promise)};
 }
+// Asynchronously wait for a promise inside of a coroutine returning kj::Promise. This operator is
+// not (yet) supported inside any other coroutine type.
+//
+// Like .then() and friends, operator co_await consumes the promise passed to it, regardless of
+// the promise's lvalue-ness. Instead of returning a new promise to you, it stores it inside an
+// Awaitable, as defined by the Coroutines TS, which lives in the enclosing coroutine's context
+// structure.
 
 }  // namespace kj
 
