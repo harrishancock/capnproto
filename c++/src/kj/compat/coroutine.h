@@ -109,32 +109,32 @@ struct CoroutineFulfiller<void>: CoroutineFulfillerBase<void> {
   void return_void() { fulfiller->fulfill(); }
 };
 
-template <typename>
+namespace {
 struct FriendAbuse;
-// An incomplete tag class template. No one will ever instantiate one of these, so we can specialize
-// kj::Promise<FriendAbuse<T>> and gain friend access to the promise's base node.
-
+}  // Anonymous namespace to avoid ODR violation in partial specialization of Promise, below.
 }  // namespace _ (private)
 
-template <typename T>
-class Promise<_::FriendAbuse<T>>: private Promise<T> {
-  // Friend our way to the base node. If you need access to the underlying kj::_::PromiseNode
-  // interface of a kj::Promise, move it into one of these.
+template <>
+class Promise<_::FriendAbuse> {
+  // This class abuses partial specialization to gain friend access to a `kj::Promise`. Right now
+  // all it supports is accessing the `kj::_::PromiseNode` pointer.
+  //
+  // TODO(soon): Find a better way to be friends with `kj::Promise`. This class is a hack.
 
 public:
-  Promise(Promise<T>&& promise): Promise<T>(mv(promise)) {}
-
-  _::PromiseNode* operator->() { return this->node.get(); }
+  template <typename T>
+  static _::PromiseNode& getNode(Promise<T>& promise) { return *promise.node; }
 };
 
 namespace _ {
 
 template <typename T>
 class PromiseAwaiter {
-  kj::Promise<_::FriendAbuse<T>> node;
+  Promise<T> promise;
+  PromiseNode& getNode() { return Promise<_::FriendAbuse>::getNode(promise); }
 
 public:
-  PromiseAwaiter(Promise<T>&& promise): node(mv(promise)) {}
+  PromiseAwaiter(Promise<T>&& promise): promise(mv(promise)) {}
 
   bool await_ready() const { return false; }
 
@@ -142,14 +142,14 @@ public:
 
   template <class CoroutineHandle>
   void await_suspend(CoroutineHandle c) {
-    node->onReady(*c.promise().adapter);
+    getNode().onReady(*c.promise().adapter);
   }
 };
 
 template <typename T>
 inline T PromiseAwaiter<T>::await_resume() {
   _::ExceptionOr<T> result;
-  node->get(result);
+  getNode().get(result);
   KJ_IF_MAYBE(exception, mv(result.exception)) {
     throwFatalException(mv(*exception));
   }
@@ -162,7 +162,7 @@ inline T PromiseAwaiter<T>::await_resume() {
 template <>
 inline void PromiseAwaiter<void>::await_resume() {
   _::ExceptionOr<_::Void> result;
-  node->get(result);
+  getNode().get(result);
   KJ_IF_MAYBE(exception, mv(result.exception)) {
     throwFatalException(mv(*exception));
   }
