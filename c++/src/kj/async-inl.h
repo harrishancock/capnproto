@@ -156,15 +156,20 @@ public:
 
 protected:
   class OnReadyEvent {
-    // Helper class for implementing onReady().
+    // Helper class for implementing `onReady()`.
 
   public:
     void init(Event& newEvent);
-    // Returns true if arm() was already called.
-
     void arm();
-    // Arms the event if init() has already been called and makes future calls to init() return
-    // true.
+    // Call `init()` from your `onReady()` implementation, and `arm()` when you're actually ready.
+    // The order in which the event is armed on the event loop depends on the order in which
+    // `init()` and `arm()` are called:
+    //
+    // Calling `arm()` before `init()` arms in breadth-first order to avoid starving the event loop
+    // with repeated immediately-ready promises.
+    //
+    // Calling `init()` before `arm()` arms in depth-first order so chained promises execute
+    // together and enjoy better cache locality.
 
   private:
     Event* event = nullptr;
