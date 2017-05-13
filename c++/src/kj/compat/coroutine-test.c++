@@ -83,9 +83,19 @@ KJ_TEST("Simple network test with a coroutine") {
   KJ_EXPECT("foo" == result);
 }
 
-kj::Promise<void> httpClient(kj::AsyncIoContext& io) {
+kj::Promise<Own<AsyncIoStream>> httpClientConnect(kj::AsyncIoContext& io) {
   auto addr = co_await io.provider->getNetwork().parseAddress("capnproto.org", 80);
-  auto connection = co_await addr->connect();
+  co_return co_await addr->connect();
+}
+
+kj::Promise<void> httpClient(kj::AsyncIoContext& io) {
+  Own<AsyncIoStream> connection;
+  try {
+    connection = co_await httpClientConnect(io);
+  } catch (const kj::Exception&) {
+    KJ_LOG(WARNING, "skipping test because couldn't connect to capnproto.org");
+    co_return;
+  }
   // Successfully connected to capnproto.org. Try doing GET /. We expect to get a redirect to
   // HTTPS, because what kind of horrible web site would serve in plaintext, really?
 
@@ -101,14 +111,15 @@ kj::Promise<void> httpClient(kj::AsyncIoContext& io) {
   KJ_EXPECT(location == "https://capnproto.org/");
 
   auto body = co_await response.body->readAllText();
+  co_return;
+  // If I comment out the previous co_return, I don't need this one. If I comment out
+  // this co_return, return_void() is never called and the program hangs.
 }
 
 KJ_TEST("HttpClient to capnproto.org with a coroutine") {
   auto io = kj::setupAsyncIo();
 
-  httpClient(io).catch_([](kj::Exception&& e) {
-    KJ_LOG(WARNING, "skipping test because couldn't connect to capnproto.org");
-  }).wait(io.waitScope);
+  httpClient(io).wait(io.waitScope);
 }
 
 #endif  // KJ_HAVE_COROUTINE
