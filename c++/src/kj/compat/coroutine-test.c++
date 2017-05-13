@@ -30,7 +30,8 @@ namespace {
 
 #ifdef KJ_HAVE_COROUTINE
 
-kj::Promise<int> simpleCoroutine() {
+kj::Promise<int> simpleCoroutine(bool dontThrow = true) {
+  KJ_ASSERT(dontThrow);
   co_await kj::Promise<void>(kj::READY_NOW);
   co_return 123;
 }
@@ -40,6 +41,13 @@ KJ_TEST("Simple coroutine test") {
   WaitScope waitScope(loop);
 
   KJ_EXPECT(simpleCoroutine().wait(waitScope) == 123);
+}
+
+KJ_TEST("Exceptions get thrown correctly") {
+  EventLoop loop;
+  WaitScope waitScope(loop);
+
+  KJ_EXPECT_THROW_RECOVERABLE(FAILED, simpleCoroutine(false).wait(waitScope));
 }
 
 kj::Promise<void> simpleClient(kj::Network& network, kj::Promise<uint> portPromise) {
