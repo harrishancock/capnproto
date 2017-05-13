@@ -148,24 +148,22 @@ public:
 
 template <typename T>
 inline T PromiseAwaiter<T>::await_resume() {
-  _::ExceptionOr<T> result;
+  ExceptionOr<FixVoid<T>> result;
   getNode().get(result);
-  KJ_IF_MAYBE(exception, mv(result.exception)) {
-    throwFatalException(mv(*exception));
-  }
-  KJ_IF_MAYBE(value, mv(result.value)) {
-    return mv(*value);
-  }
-  KJ_UNREACHABLE;
-}
 
-template <>
-inline void PromiseAwaiter<void>::await_resume() {
-  _::ExceptionOr<_::Void> result;
-  getNode().get(result);
-  KJ_IF_MAYBE(exception, mv(result.exception)) {
-    throwFatalException(mv(*exception));
+  // Note: copied from Promise::wait() implementation.
+  KJ_IF_MAYBE(value, result.value) {
+    KJ_IF_MAYBE(exception, result.exception) {
+      throwRecoverableException(kj::mv(*exception));
+    }
+    return _::returnMaybeVoid(kj::mv(*value));
+  } else KJ_IF_MAYBE(exception, result.exception) {
+    throwFatalException(kj::mv(*exception));
+  } else {
+    // Result contained neither a value nor an exception?
+    KJ_UNREACHABLE;
   }
+
 }
 
 }  // namespace _ (private)
