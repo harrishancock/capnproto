@@ -109,13 +109,14 @@ struct CoroutineFulfiller<void>: CoroutineFulfillerBase<void> {
   void return_void() { fulfiller->fulfill(); }
 };
 
-namespace {
-struct FriendAbuse;
-}  // Anonymous namespace to avoid ODR violation in partial specialization of Promise, below.
+namespace { struct FriendHack; }
+// We need a type for which to specialize `Promise`. I put it in an anonymous namespace in an
+// attempt to avoid ODR violations.
+
 }  // namespace _ (private)
 
 template <>
-class Promise<_::FriendAbuse> {
+class Promise<_::FriendHack> {
   // This class abuses partial specialization to gain friend access to a `kj::Promise`. Right now
   // all it supports is accessing the `kj::_::PromiseNode` pointer.
   //
@@ -131,7 +132,7 @@ namespace _ {
 template <typename T>
 class PromiseAwaiter {
   Promise<T> promise;
-  PromiseNode& getNode() { return Promise<_::FriendAbuse>::getNode(promise); }
+  PromiseNode& getNode() { return Promise<FriendHack>::getNode(promise); }
 
 public:
   PromiseAwaiter(Promise<T>&& promise): promise(mv(promise)) {}
