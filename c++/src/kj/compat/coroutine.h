@@ -148,18 +148,24 @@ public:
   }
 
   void await_suspend(std::experimental::coroutine_handle<> c) {
-    promise2 = promise.then([this, c](T&& r) {
-      return wakeUp(c, mv(r));
-    }).eagerlyEvaluate([this, c](Exception&& e) {
-      return wakeUp(c, {false, mv(e)});
-    });
+    promise2 = promise.then(onValue(c), onException(c)).eagerlyEvaluate(nullptr);
   }
 
 private:
-  Promise<void> wakeUp(std::experimental::coroutine_handle<> c, ExceptionOr<FixVoid<T>>&& r) {
+  auto onValue(std::experimental::coroutine_handle<> c) {
+    return [this, c](T&& r) { return resume(c, mv(r)); };
+  }
+  auto onException(std::experimental::coroutine_handle<> c) {
+    return [this, c](Exception&& e) { return resume(c, {false, mv(r)}); };
+  }
+
+  Promise<void> resume(std::experimental::coroutine_handle<> c, ExceptionOr<FixVoid<T>>&& r) {
     result = mv(r);
     KJ_DEFER(c.resume());
     return mv(promise2);
+    // We are currently executing in a `promise2.then()` continuation, but `c.resume()` destroys
+    // `this`, which owns `promise2`. Since that would lead to undefined behavior, return `promise2`
+    // instead.
   }
 
   Promise<T> promise;
@@ -168,12 +174,9 @@ private:
 };
 
 template <>
-void PromiseAwaiter<void>::await_suspend(std::experimental::coroutine_handle<> c) {
-  promise2 = promise.then([this, c]() {
-    return wakeUp(c, Void{});
-  }).eagerlyEvaluate([this, c](Exception&& e) {
-    return wakeUp(c, {false, mv(e)});
-  });
+inline auto PromiseAwaiter<void>::onValue(std::experimental::coroutine_handle<> c) {
+  // Special case for `Promise<void>`.
+  return [this, c]() { return resume(c, Void{}); };
 }
 
 }  // namespace _ (private)
