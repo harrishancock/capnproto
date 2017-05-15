@@ -44,38 +44,19 @@
 
 #ifdef KJ_HAVE_COROUTINE
 
+// =======================================================================================
+// coroutine_traits<kj::Promise<T>, ...>::promise_type implementation
+
 namespace kj {
 namespace _ {
 
-template <typename T>
-struct CoroutineFulfiller;
-
-struct CoroutineAdapter: public Event {
-  std::experimental::coroutine_handle<> coroutine;
-
-  template <typename T>
-  CoroutineAdapter(PromiseFulfiller<T>& fulfiller,
-      std::experimental::coroutine_handle<CoroutineFulfiller<T>> c)
-      : coroutine(c)
-  {
-    c.promise().adapter = this;
-    c.promise().fulfiller = &fulfiller;
-  }
-
-  ~CoroutineAdapter() noexcept(false) { if (coroutine) { coroutine.destroy(); } }
-
-  Maybe<Own<Event>> fire() override {
-    coroutine.resume();
-    return nullptr;
-  }
-};
+struct CoroutineAdapter;
 
 template <typename T>
-struct CoroutineFulfillerBase {
+class CoroutineImplBase {
+public:
   Promise<T> get_return_object() {
-    return newAdaptedPromise<T, CoroutineAdapter>(
-        std::experimental::coroutine_handle<CoroutineFulfiller<T>>::from_promise(
-            static_cast<CoroutineFulfiller<T>&>(*this)));
+    return newAdaptedPromise<T, CoroutineAdapter>(*this);
   }
 
   auto initial_suspend() { return std::experimental::suspend_never{}; }
@@ -86,98 +67,121 @@ struct CoroutineFulfillerBase {
   }
 
   void set_exception(std::exception_ptr e) {
-    // TODO(msvc): MSVC as of VS2017 implements an older wording of the Coroutines TS, and uses
-    //   this set_exception() instead of unhandled_exception(). Remove this when we can.
+    // TODO(msvc): Remove when MSVC updates to use unhandled_exception().
     fulfiller->rejectIfThrows([e = mv(e)] { std::rethrow_exception(mv(e)); });
   }
 
+  ~CoroutineImplBase() { adapter->coroutine = nullptr; }
+
+protected:
+  friend struct CoroutineAdapter;
   CoroutineAdapter* adapter;
   PromiseFulfiller<T>* fulfiller;
-
-  ~CoroutineFulfillerBase() { adapter->coroutine = nullptr; }
 };
 
 template <typename T>
-struct CoroutineFulfiller: CoroutineFulfillerBase<T> {
-  void return_value(T&& value) { this->fulfiller->fulfill(mv(value)); }
-  template <typename U>
-  void return_value(U&& value) { this->fulfiller->fulfill(decayCp(value)); }
+class CoroutineImpl: public CoroutineImplBase<T> {
+public:
+  void return_value(T&& value) { fulfiller->fulfill(mv(value)); }
 };
 
 template <>
-struct CoroutineFulfiller<void>: CoroutineFulfillerBase<void> {
+class CoroutineImpl<void>: public CoroutineImplBase<void> {
+public:
   void return_void() { fulfiller->fulfill(); }
 };
 
-namespace { struct FriendHack; }
-// We need a type for which to specialize `Promise`. I put it in an anonymous namespace in an
-// attempt to avoid ODR violations.
-
-}  // namespace _ (private)
-
-template <>
-class Promise<_::FriendHack> {
-  // This class abuses partial specialization to gain friend access to a `kj::Promise`. Right now
-  // all it supports is accessing the `kj::_::PromiseNode` pointer.
-  //
-  // TODO(soon): Find a better way to be friends with `kj::Promise`. This class is a hack.
-
-public:
+struct CoroutineAdapter {
   template <typename T>
-  static _::PromiseNode& getNode(Promise<T>& promise) { return *promise.node; }
+  CoroutineAdapter(PromiseFulfiller<T>& f, CoroutineImplBase<T>& impl)
+      : coroutine(std::experimental::coroutine_handle<>::from_address(&impl))
+  {
+    impl.adapter = this;
+    impl.fulfiller = &f;
+  }
+
+  ~CoroutineAdapter() noexcept(false) { if (coroutine) { coroutine.destroy(); } }
+
+  std::experimental::coroutine_handle<> coroutine;
 };
 
+}  // namespace _ (private)
+}  // namespace kj
+
+namespace std {
+namespace experimental {
+
+template <class T, class... Args>
+struct coroutine_traits<kj::Promise<T>, Args...> {
+  using promise_type = kj::_::CoroutineImpl<T>;
+};
+
+}  // namespace experimental
+}  // namespace std
+
+// =======================================================================================
+// co_await kj::Promise implementation
+
+namespace kj {
 namespace _ {
 
 template <typename T>
 class PromiseAwaiter {
-  Promise<T> promise;
-  PromiseNode& getNode() { return Promise<FriendHack>::getNode(promise); }
-
 public:
-  PromiseAwaiter(Promise<T>&& promise): promise(mv(promise)) {}
+  PromiseAwaiter(Promise<T>&& p): promise(mv(p)) {}
 
   bool await_ready() const { return false; }
 
-  T await_resume();
-
-  template <class CoroutineHandle>
-  void await_suspend(CoroutineHandle c) {
-    getNode().onReady(*c.promise().adapter);
+  T await_resume() {
+    // Copied from Promise::wait() implementation.
+    KJ_IF_MAYBE(value, result.value) {
+      KJ_IF_MAYBE(exception, result.exception) {
+        throwRecoverableException(kj::mv(*exception));
+      }
+      return _::returnMaybeVoid(kj::mv(*value));
+    } else KJ_IF_MAYBE(exception, result.exception) {
+      throwFatalException(kj::mv(*exception));
+    } else {
+      // Result contained neither a value nor an exception?
+      KJ_UNREACHABLE;
+    }
   }
+
+  void await_suspend(std::experimental::coroutine_handle<> c) {
+    promise2 = promise.then([this, c](T&& r) {
+      return wakeUp(c, mv(r));
+    }).eagerlyEvaluate([this, c](Exception&& e) {
+      return wakeUp(c, {false, mv(e)});
+    });
+  }
+
+private:
+  Promise<void> wakeUp(std::experimental::coroutine_handle<> c, ExceptionOr<FixVoid<T>>&& r) {
+    result = mv(r);
+    KJ_DEFER(c.resume());
+    return mv(promise2);
+  }
+
+  Promise<T> promise;
+  Promise<void> promise2{NEVER_DONE};
+  ExceptionOr<FixVoid<T>> result;
 };
 
-template <typename T>
-inline T PromiseAwaiter<T>::await_resume() {
-  ExceptionOr<FixVoid<T>> result;
-  getNode().get(result);
-
-  // Note: copied from Promise::wait() implementation.
-  KJ_IF_MAYBE(value, result.value) {
-    KJ_IF_MAYBE(exception, result.exception) {
-      throwRecoverableException(kj::mv(*exception));
-    }
-    return _::returnMaybeVoid(kj::mv(*value));
-  } else KJ_IF_MAYBE(exception, result.exception) {
-    throwFatalException(kj::mv(*exception));
-  } else {
-    // Result contained neither a value nor an exception?
-    KJ_UNREACHABLE;
-  }
-
+template <>
+void PromiseAwaiter<void>::await_suspend(std::experimental::coroutine_handle<> c) {
+  promise2 = promise.then([this, c]() {
+    return wakeUp(c, Void{});
+  }).eagerlyEvaluate([this, c](Exception&& e) {
+    return wakeUp(c, {false, mv(e)});
+  });
 }
 
 }  // namespace _ (private)
 
 template <class T>
-auto operator co_await(Promise<T>& promise) {
-  return _::PromiseAwaiter<T>{mv(promise)};
-}
-
+auto operator co_await(Promise<T>& promise) { return _::PromiseAwaiter<T>{mv(promise)}; }
 template <class T>
-auto operator co_await(Promise<T>&& promise) {
-  return _::PromiseAwaiter<T>{mv(promise)};
-}
+auto operator co_await(Promise<T>&& promise) { return _::PromiseAwaiter<T>{mv(promise)}; }
 // Asynchronously wait for a promise inside of a coroutine returning kj::Promise. This operator is
 // not (yet) supported inside any other coroutine type.
 //
@@ -187,17 +191,6 @@ auto operator co_await(Promise<T>&& promise) {
 // structure.
 
 }  // namespace kj
-
-namespace std {
-namespace experimental {
-
-template <class T, class... Args>
-struct coroutine_traits<kj::Promise<T>, Args...> {
-  using promise_type = kj::_::CoroutineFulfiller<T>;
-};
-
-}  // namespace experimental
-}  // namespace std
 
 #endif  // KJ_HAVE_COROUTINE
 
